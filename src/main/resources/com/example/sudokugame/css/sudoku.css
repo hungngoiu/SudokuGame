@@ -1,0 +1,41 @@
+.background{
+    -fx-background-color: white;
+}
+
+
+#sudokuBoard{
+    -fx-background-color: white;
+    -fx-background-radius: 8px  8px  8px  8px;
+    -fx-border-color: #D7E1F4;
+    -fx-border-radius: 8px  8px  8px  8px;
+
+}
+
+.textFieldInput{
+    -fx-background-color: #F4F6FF;
+    -fx-background-radius: 8px;
+    -fx-text-fill: #307DF6;
+    -fx-font-size: 36px;
+    -fx-font-weight: 700;
+    -fx-alignment: CENTER;
+}
+#newGameButton {
+    -fx-background-color: #307DF6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 25px;
+    -fx-background-radius: 40px 40px 40px 40px;
+    -fx-opacity: 10;
+    -fx-gap: 10;
+}
+
+.lblSudoku{
+
+    -fx-font-family: "Inter";
+    -fx-font-style: normal;
+    -fx-font-weight: 400;
+    -fx-font-size: 27px;
+    -fx-line-height: 29px;
+    -fx-text-fill: #307DF6;
+
+}
