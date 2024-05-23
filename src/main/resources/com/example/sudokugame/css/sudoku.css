@@ -6,7 +6,7 @@
 #sudokuBoard{
     -fx-background-color: white;
     -fx-background-radius: 8px  8px  8px  8px;
-    -fx-border-color: #D7E1F4;
+    -fx-border-color: transparent;
     -fx-border-radius: 8px  8px  8px  8px;
 
 }
@@ -30,12 +30,24 @@
 }
 
 .lblSudoku{
-
     -fx-font-family: "Inter";
     -fx-font-style: normal;
     -fx-font-weight: 400;
     -fx-font-size: 27px;
     -fx-line-height: 29px;
     -fx-text-fill: #307DF6;
+}
 
+.textFieldOccupied{
+    -fx-text-fill: black;
+    -fx-font-size: 27px;
+    -fx-font-weight: 400;
+    -fx-alignment: CENTER;
+}
+
+.textFieldUnoccupied{
+    -fx-text-fill: #307DF6;
+    -fx-font-size: 27px;
+    -fx-font-weight: 400;
+    -fx-alignment: CENTER;
 }
