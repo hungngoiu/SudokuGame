@@ -30,12 +30,24 @@
 }
 
 .lblSudoku{
-
     -fx-font-family: "Inter";
     -fx-font-style: normal;
     -fx-font-weight: 400;
     -fx-font-size: 27px;
     -fx-line-height: 29px;
     -fx-text-fill: #307DF6;
+}
 
+.textFieldOccupied{
+    -fx-text-fill: black;
+    -fx-font-size: 27px;
+    -fx-font-weight: 400;
+    -fx-alignment: CENTER;
+}
+
+.textFieldUnoccupied{
+    -fx-text-fill: #307DF6;
+    -fx-font-size: 27px;
+    -fx-font-weight: 400;
+    -fx-alignment: CENTER;
 }

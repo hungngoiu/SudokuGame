@@ -39,7 +39,7 @@ public class SudokuController implements Initializable {
                 textField.setPrefWidth(50);
                 textField.setPrefHeight(50);
 
-                textField.setStyle("-fx-text-box-border: transparent");
+                //textField.setStyle("-fx-text-box-border: transparent");
                 textField.setEditable(false);
 
                 textField.setAlignment(Pos.CENTER);
@@ -86,14 +86,15 @@ public class SudokuController implements Initializable {
             textField.setText(String.valueOf(val));
         }
         if (!level.isOccupied(row, col)) {
-            //TO_DO
-            //Lam cho may o khong modify dc khac may o thuong (in mo hay j j do)
+            textField.getStyleClass().add("textFieldUnoccupied");
             textField.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     select = SUDOKU_SIZE * row + col;
                 }
             });
+        } else {
+            textField.getStyleClass().add("textFieldOccupied");
         }
     }
     public void setLevel(Level level) {
