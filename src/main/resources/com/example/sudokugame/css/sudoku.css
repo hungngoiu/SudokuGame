@@ -6,7 +6,7 @@
 #sudokuBoard{
     -fx-background-color: white;
     -fx-background-radius: 8px  8px  8px  8px;
-    -fx-border-color: #D7E1F4;
+    -fx-border-color: transparent;
     -fx-border-radius: 8px  8px  8px  8px;
 
 }
