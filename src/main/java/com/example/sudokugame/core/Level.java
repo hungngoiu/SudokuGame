@@ -1,12 +1,36 @@
 package com.example.sudokugame.core;
 
-import static com.example.sudokugame.util.Constants.SUDOKU_SIZE;
+import java.util.Stack;
 
+import static com.example.sudokugame.util.Constants.SUDOKU_SIZE;
+class LastMove {
+    private int row;
+    private int col;
+    private int oldValue; // Store the old value of that cell when we insert
+
+    LastMove(int row, int col, int value) {
+        this.row = row;
+        this.col = col;
+        this.oldValue = value;
+    }
+
+    public int getRow() {
+        return row;
+    }
+    public int getCol() {
+        return col;
+    }
+    public int getOldValue() {
+        return oldValue;
+    }
+}
 public class Level {
     private int[][] sudokuBoard;
     private int[][] initialValue;
+    Stack<LastMove> moveStack;
 
     public Level(int[][] sudokuBoard) {
+        this.moveStack = new Stack<>();
         this.sudokuBoard = sudokuBoard;
         this.initialValue = new int[SUDOKU_SIZE][SUDOKU_SIZE];
 
@@ -31,13 +55,21 @@ public class Level {
 
     public boolean insert(int row, int col, int value) {
         if (!this.isOccupied(row, col) && this.isValidInsert(row, col, value)) {
+            this.moveStack.push(new LastMove(row, col, sudokuBoard[row][col]));
             this.sudokuBoard[row][col] = value;
             return true;
         } else {
             return false;
         }
     }
-
+    public boolean undo() {
+        if (!moveStack.isEmpty()) {
+            LastMove lastMove = moveStack.pop();
+            sudokuBoard[lastMove.getRow()][lastMove.getCol()] = lastMove.getOldValue();
+            return true;
+        }
+        return false;
+    }
     public boolean isOccupied(int row, int col) {
         return (this.initialValue[row][col] == 1);
     }
