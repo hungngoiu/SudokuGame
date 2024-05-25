@@ -32,12 +32,12 @@ public class Level {
     private int[][] sudokuBoard;
     private int[][] initialValue;
     Stack<Move> moveStack;
-    Stack<Move> undoStack;
+    Stack<Move> redoStack;
 
 
     public Level(int[][] sudokuBoard) {
         this.moveStack = new Stack<>();
-        this.undoStack = new Stack<>();
+        this.redoStack = new Stack<>();
         this.sudokuBoard = sudokuBoard;
         this.initialValue = new int[SUDOKU_SIZE][SUDOKU_SIZE];
 
@@ -64,7 +64,7 @@ public class Level {
         if (!this.isOccupied(row, col) && this.isValidInsert(row, col, value)) {
             Move move = new Move(row, col, sudokuBoard[row][col], value);
             this.moveStack.push(move);
-
+            this.redoStack.clear();
             this.sudokuBoard[row][col] = value;
             return true;
         } else {
@@ -73,7 +73,7 @@ public class Level {
     }
     public boolean undo() {
         if (!moveStack.isEmpty()) {
-            this.undoStack.push(moveStack.peek());
+            this.redoStack.push(moveStack.peek());
             Move lastMove = moveStack.pop();
             sudokuBoard[lastMove.getRow()][lastMove.getCol()] = lastMove.getOldValue();
             return true;
@@ -81,9 +81,9 @@ public class Level {
         return false;
     }
     public boolean redo() {
-        if (!undoStack.isEmpty()) {
-            this.moveStack.push(undoStack.peek());
-            Move lastMove = undoStack.pop();
+        if (!redoStack.isEmpty()) {
+            this.moveStack.push(redoStack.peek());
+            Move lastMove = redoStack.pop();
             sudokuBoard[lastMove.getRow()][lastMove.getCol()] = lastMove.getNewValue();
             return true;
         }
