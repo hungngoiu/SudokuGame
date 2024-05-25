@@ -100,4 +100,15 @@ public class Level {
         }
         return true;
     }
+
+    public boolean redo() {
+        if (!moveStack.isEmpty()) {
+            while (!moveStack.isEmpty()){
+                LastMove lastMove = moveStack.pop();
+                sudokuBoard[lastMove.getRow()][lastMove.getCol()] = lastMove.getOldValue();
+            }
+            return true;
+        }
+        return false;
+    }
 }
