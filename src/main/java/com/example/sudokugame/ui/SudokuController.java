@@ -39,7 +39,7 @@ public class SudokuController implements Initializable {
                 textField.setPrefWidth(50);
                 textField.setPrefHeight(50);
 
-                //textField.setStyle("-fx-text-box-border: transparent");
+                textField.setStyle("-fx-text-box-border: transparent");
                 textField.setEditable(false);
 
                 textField.setAlignment(Pos.CENTER);
