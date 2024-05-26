@@ -8,5 +8,4 @@ module com.example.sudokugame {
     opens com.example.sudokugame.ui to javafx.fxml;
     exports com.example.sudokugame.ui;
 
-
 }

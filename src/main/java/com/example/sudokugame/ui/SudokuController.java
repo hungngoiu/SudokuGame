@@ -1,6 +1,7 @@
 package com.example.sudokugame.ui;
 
 import com.example.sudokugame.core.Level;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
@@ -24,6 +25,8 @@ public class SudokuController implements Initializable {
     private GridPane insertGrid;
     @FXML
     private Button undoButton;
+    @FXML
+    private Button redoButton;
     private Level level;
     private int select = -1;
 
@@ -116,12 +119,21 @@ public class SudokuController implements Initializable {
         sudokuBoard.requestFocus();
         select = -1;
     }
-    public void undo() {
+    @FXML
+    private void undo() {
         select = -1;
         if (level.undo()) {
             drawSudokuBoard();
         }
         undoButton.requestFocus();
+    }
+    @FXML
+    private void redo(ActionEvent event) {
+        select = -1;
+        if (level.redo()){
+            drawSudokuBoard();
+        }
+        redoButton.requestFocus();
     }
 
 }
