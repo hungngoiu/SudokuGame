@@ -37,7 +37,79 @@
     -fx-line-height: 29px;
     -fx-text-fill: #307DF6;
 }
+#largeLblSudoku{
 
+    -fx-font-family: 'Inter';
+    -fx-font-style: normal;
+    -fx-font-weight: 400;
+    -fx-font-size: 100px;
+    -fx-line-height: 77px;
+    -fx-text-fill:  #FFFFFF;
+}
+#instruction{
+    -fx-font-family: 'Inter';
+    -fx-font-style: normal;
+    -fx-font-weight: 700;
+    -fx-font-size: 17px;
+    -fx-line-height: 15px;
+    -fx-text-fill:  #4E596B;
+    -fx-alignment: CENTER;
+}
+#playBtn{
+    -fx-box-sizing: border-box;
+    -fx-padding: 8px 32px;
+    -fx-gap: 10px;
+    -fx-background-color: transparent;
+
+    -fx-border-color: #307DF6;
+    -fx-border-width: 2px;
+    -fx-border-radius: 24px;
+
+
+    -fx-font-family: 'Inter';
+    -fx-font-style: normal;
+    -fx-font-weight: 800;
+    -fx-font-size: 25px;
+    -fx-line-height: 19px;
+    -fx-letter-spacing: 0.05em;
+    -fx-text-transform: uppercase;
+
+    -fx-text-fill: #307DF6;
+}
+
+#solveBtn{
+    -fx-box-sizing: border-box;
+    -fx-padding: 8px 32px;
+    -fx-gap: 10px;
+    -fx-background-color: #307DF6;
+    -fx-background-radius: 24px;
+
+    -fx-font-family: 'Inter';
+    -fx-font-style: normal;
+    -fx-font-weight: 800;
+    -fx-font-size: 25px;
+    -fx-line-height: 19px;
+    -fx-letter-spacing: 0.08em;
+    -fx-text-transform: uppercase;
+
+    -fx-text-fill: white;
+}
+#block{
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+
+    -fx-background-color: #FFFFFF;
+    -fx-opacity: 0.3;
+    -fx-background-radius: 4px;
+}
+#blockFade{
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
+
+    -fx-background-color: #FFFFFF;
+    -fx-opacity: 0.1;
+    -fx-background-radius: 4px;
+}
 .textFieldOccupied{
     -fx-text-fill: black;
     -fx-font-size: 27px;
@@ -51,3 +123,4 @@
     -fx-font-weight: 400;
     -fx-alignment: CENTER;
 }
+
