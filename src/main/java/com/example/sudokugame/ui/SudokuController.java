@@ -1,7 +1,6 @@
 package com.example.sudokugame.ui;
 
-import com.example.sudokugame.core.Level;
-import javafx.event.ActionEvent;
+import com.example.sudokugame.core.Game;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
@@ -27,7 +26,7 @@ public class SudokuController implements Initializable {
     private Button undoButton;
     @FXML
     private Button redoButton;
-    private Level level;
+    private Game game = Game.getInstance();
     private int select = -1;
 
 
@@ -35,6 +34,7 @@ public class SudokuController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initSudokuBoard();
         initInputBoard();
+        drawSudokuBoard();
     }
 
     private void initSudokuBoard() {
@@ -68,7 +68,7 @@ public class SudokuController implements Initializable {
                             TextField textfield = (TextField) node;
                             int row = select / SUDOKU_SIZE;
                             int col = select % SUDOKU_SIZE;
-                            level.insert(row, col, Integer.parseInt(textfield.getText()));
+                            game.getLevel().insert(row, col, Integer.parseInt(textfield.getText()));
                         }
                     }
                 }
@@ -82,7 +82,7 @@ public class SudokuController implements Initializable {
     public void drawSudokuBoard() {
         for (int row = 0; row < SUDOKU_SIZE; row++) {
             for (int col = 0; col < SUDOKU_SIZE; col++) {
-                drawCell(row, col, level.getElement(row, col));
+                drawCell(row, col, game.getLevel().getElement(row, col));
             }
         }}
     private void drawCell(int row, int col, int val) {
@@ -93,7 +93,8 @@ public class SudokuController implements Initializable {
         else {
             textField.setText("");
         }
-        if (!level.isOccupied(row, col)) {
+        if (!game.getLevel().isOccupied(row, col)) {
+            textField.getStyleClass().removeAll("textFieldOccupied");
             textField.getStyleClass().add("textFieldUnoccupied");
             textField.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -102,6 +103,7 @@ public class SudokuController implements Initializable {
                 }
             });
         } else {
+            textField.getStyleClass().removeAll("textFieldUnoccupied");
             textField.getStyleClass().add("textFieldOccupied");
             textField.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -111,10 +113,6 @@ public class SudokuController implements Initializable {
             });
         }
     }
-    public void setLevel(Level level) {
-        this.level = level;
-        drawSudokuBoard();
-    }
     public void resetSelect() { // method for reset focus and select value when click outside of the board
         sudokuBoard.requestFocus();
         select = -1;
@@ -122,18 +120,30 @@ public class SudokuController implements Initializable {
     @FXML
     private void undo() {
         select = -1;
-        if (level.undo()) {
+        if (game.getLevel().undo()) {
             drawSudokuBoard();
         }
         undoButton.requestFocus();
     }
     @FXML
-    private void redo(ActionEvent event) {
+    private void redo() {
         select = -1;
-        if (level.redo()){
+        if (game.getLevel().redo()){
             drawSudokuBoard();
         }
         redoButton.requestFocus();
+    }
+    @FXML
+    private void restart() {
+        resetSelect();
+        game.loadLevel();
+        drawSudokuBoard();
+    }
+    @FXML
+    private void newGame() {
+        resetSelect();
+        game.nextLevel();
+        drawSudokuBoard();
     }
 
 }
