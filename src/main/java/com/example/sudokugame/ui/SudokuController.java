@@ -5,17 +5,23 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static com.example.sudokugame.util.Constants.RESOURCE_ROOT;
 import static com.example.sudokugame.util.Constants.SUDOKU_SIZE;
 
 public class SudokuController implements Initializable {
@@ -69,6 +75,11 @@ public class SudokuController implements Initializable {
                             int row = select / SUDOKU_SIZE;
                             int col = select % SUDOKU_SIZE;
                             level.insert(row, col, Integer.parseInt(textfield.getText()));
+                            try {
+                                handleGameOver();
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
                         }
                     }
                 }
@@ -134,6 +145,17 @@ public class SudokuController implements Initializable {
             drawSudokuBoard();
         }
         redoButton.requestFocus();
+    }
+
+    private void handleGameOver() throws IOException {
+        if(level.isGameOver()){
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(RESOURCE_ROOT + "GameOver.fxml"));
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage(StageStyle.UTILITY);
+            stage.setResizable(false);
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 
 }

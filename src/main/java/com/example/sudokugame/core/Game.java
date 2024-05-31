@@ -4,6 +4,7 @@ import com.example.sudokugame.ui.SudokuController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -14,12 +15,18 @@ public final class Game {
     private static final Game INSTANCE = new Game();
     private Stage stage;
     private Level level;
+    private static Game game;
 
     private Game() {
     }
     public static Game getInstance() {
         return INSTANCE;
     }
+
+    public static void setInstanceGame(Game game) {
+        Game.game = game;
+    }
+
     public void initGame(Stage stage) {
         this.stage = stage;
         stage.setTitle("Sudoku Game");
@@ -34,5 +41,6 @@ public final class Game {
         stage.setScene(scene);
         stage.show();
     }
+
 
 }

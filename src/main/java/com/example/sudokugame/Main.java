@@ -11,12 +11,10 @@ import java.io.IOException;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-//        Game game = Game.getInstance();
-//        game.initGame(stage);
-//        game.startGame();
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Menu.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 
