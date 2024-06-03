@@ -1,6 +1,8 @@
 package com.example.sudokugame.ui;
 
+import com.example.sudokugame.core.Game;
 import com.example.sudokugame.core.Level;
+import com.example.sudokugame.util.LoadMethods;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -24,7 +26,7 @@ import java.util.ResourceBundle;
 import static com.example.sudokugame.util.Constants.RESOURCE_ROOT;
 import static com.example.sudokugame.util.Constants.SUDOKU_SIZE;
 
-public class SudokuController implements Initializable {
+public class SudokuController implements Initializable{
     @FXML
     private GridPane sudokuBoard;
     @FXML
@@ -33,7 +35,7 @@ public class SudokuController implements Initializable {
     private Button undoButton;
     @FXML
     private Button redoButton;
-    private Level level;
+    private Game game = Game.getInstance();
     private int select = -1;
 
 
@@ -41,6 +43,7 @@ public class SudokuController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initSudokuBoard();
         initInputBoard();
+        drawSudokuBoard();
     }
 
     private void initSudokuBoard() {
@@ -74,15 +77,11 @@ public class SudokuController implements Initializable {
                             TextField textfield = (TextField) node;
                             int row = select / SUDOKU_SIZE;
                             int col = select % SUDOKU_SIZE;
-                            level.insert(row, col, Integer.parseInt(textfield.getText()));
-                            try {
-                                handleGameOver();
-                            } catch (IOException ex) {
-                                throw new RuntimeException(ex);
-                            }
+                            game.getLevel().insert(row, col, Integer.parseInt(textfield.getText()));
                         }
                     }
                 }
+
                 select = -1;
                 drawSudokuBoard();
             }
@@ -93,7 +92,7 @@ public class SudokuController implements Initializable {
     public void drawSudokuBoard() {
         for (int row = 0; row < SUDOKU_SIZE; row++) {
             for (int col = 0; col < SUDOKU_SIZE; col++) {
-                drawCell(row, col, level.getElement(row, col));
+                drawCell(row, col, game.getLevel().getElement(row, col));
             }
         }}
     private void drawCell(int row, int col, int val) {
@@ -104,7 +103,8 @@ public class SudokuController implements Initializable {
         else {
             textField.setText("");
         }
-        if (!level.isOccupied(row, col)) {
+        if (!game.getLevel().isOccupied(row, col)) {
+            textField.getStyleClass().removeAll("textFieldOccupied");
             textField.getStyleClass().add("textFieldUnoccupied");
             textField.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -113,6 +113,7 @@ public class SudokuController implements Initializable {
                 }
             });
         } else {
+            textField.getStyleClass().removeAll("textFieldUnoccupied");
             textField.getStyleClass().add("textFieldOccupied");
             textField.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -122,10 +123,6 @@ public class SudokuController implements Initializable {
             });
         }
     }
-    public void setLevel(Level level) {
-        this.level = level;
-        drawSudokuBoard();
-    }
     public void resetSelect() { // method for reset focus and select value when click outside of the board
         sudokuBoard.requestFocus();
         select = -1;
@@ -133,29 +130,34 @@ public class SudokuController implements Initializable {
     @FXML
     private void undo() {
         select = -1;
-        if (level.undo()) {
+        if (game.getLevel().undo()) {
             drawSudokuBoard();
         }
         undoButton.requestFocus();
     }
     @FXML
-    private void redo(ActionEvent event) {
+    private void redo() {
         select = -1;
-        if (level.redo()){
+        if (game.getLevel().redo()){
             drawSudokuBoard();
         }
         redoButton.requestFocus();
     }
-
-    private void handleGameOver() throws IOException {
-        if(level.isGameOver()){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(RESOURCE_ROOT + "GameOver.fxml"));
-            Scene scene = new Scene(loader.load());
-            Stage stage = new Stage(StageStyle.UTILITY);
-            stage.setResizable(false);
-            stage.setScene(scene);
-            stage.show();
-        }
+    @FXML
+    private void restart() {
+        resetSelect();
+        game.loadLevel();
+        drawSudokuBoard();
+    }
+    @FXML
+    private void newGame() {
+        resetSelect();
+        game.nextLevel();
+        drawSudokuBoard();
     }
 
+    @FXML
+    private void backToMenu(ActionEvent event) {
+        LoadMethods.switchToScene(event, "Menu.fxml");
+    }
 }

@@ -8,8 +8,8 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.util.Stack;
 
-import static com.example.sudokugame.util.Constants.RESOURCE_ROOT;
-import static com.example.sudokugame.util.Constants.SUDOKU_SIZE;
+import static com.example.sudokugame.util.Constants.*;
+
 class Move {
     private int row;
     private int col;
@@ -40,8 +40,7 @@ public class Level {
     private int[][] initialValue;
     Stack<Move> moveStack;
     Stack<Move> redoStack;
-    private int mistakeCount;
-    private boolean gameOver = false;
+
 
 
     public Level(int[][] sudokuBoard) {
@@ -70,33 +69,15 @@ public class Level {
     }
 
     public boolean insert(int row, int col, int value) {
-        if(!isValidInsert(row, col, value)) {
-            mistakeCount++;
-            System.out.println(mistakeCount);
-        }
-        if(mistakeCount == 3){
-            gameOver = true;
-            mistakeCount = 0;
-            return false;
-        } else {
-            if(!this.isOccupied(row, col)){
-                Move move = new Move(row, col, sudokuBoard[row][col], value);
-                this.moveStack.push(move);
-                this.redoStack.clear();
-                this.sudokuBoard[row][col] = value;
-            }
+        if(!this.isOccupied(row, col) && isValidInsert(row, col, value)) {
+            Move move = new Move(row, col, sudokuBoard[row][col], value);
+            this.moveStack.push(move);
+            this.redoStack.clear();
+            this.sudokuBoard[row][col] = value;
             return true;
+        } else {
+            return false;
         }
-
-//        if (!this.isOccupied(row, col)) {
-//            Move move = new Move(row, col, sudokuBoard[row][col], value);
-//            this.moveStack.push(move);
-//            this.redoStack.clear();
-//            this.sudokuBoard[row][col] = value;
-//            return true;
-//        } else {
-//            return false;
-//        }
     }
     public boolean undo() {
         if (!moveStack.isEmpty()) {
@@ -147,7 +128,6 @@ public class Level {
         return true;
     }
 
-    public boolean isGameOver() {
-        return gameOver;
-    }
+
+
 }

@@ -8,6 +8,7 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
+import static com.example.sudokugame.util.Constants.LEVELS_NUMBER;
 import static com.example.sudokugame.util.Constants.RESOURCE_ROOT;
 import static com.example.sudokugame.util.LoadMethods.LoadLevel;
 
@@ -15,32 +16,40 @@ public final class Game {
     private static final Game INSTANCE = new Game();
     private Stage stage;
     private Level level;
-    private static Game game;
+    private int levelIndex;
 
     private Game() {
+        levelIndex = 0;
     }
     public static Game getInstance() {
         return INSTANCE;
     }
-
-    public static void setInstanceGame(Game game) {
-        Game.game = game;
-    }
-
     public void initGame(Stage stage) {
         this.stage = stage;
         stage.setTitle("Sudoku Game");
         stage.setResizable(false);
-        level = LoadLevel(1);
+        level = LoadLevel(levelIndex);
     }
     public void startGame() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(RESOURCE_ROOT + "SudokuUI.fxml"));
         Scene scene = new Scene(loader.load());
         SudokuController controller = loader.getController();
-        controller.setLevel(level);
         stage.setScene(scene);
         stage.show();
     }
+    public void loadLevel() {
+        level = LoadLevel(levelIndex);
+    }
+    public Level getLevel() {
+        return level;
+    }
 
+    public void nextLevel() {
+        levelIndex++;
+        if (levelIndex == LEVELS_NUMBER) {
+            levelIndex = 0;
+        }
+        loadLevel();
+    }
 
 }
