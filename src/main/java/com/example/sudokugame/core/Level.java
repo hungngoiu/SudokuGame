@@ -44,6 +44,8 @@ public class Level {
     private int[][] initialValue;
     Stack<Move> moveStack;
     Stack<Move> redoStack;
+    private boolean isValidInsert = true;
+    private int mistakeCount;
 
     public Level(int[][] sudokuBoard) {
         this.moveStack = new Stack<>();
@@ -103,17 +105,23 @@ public class Level {
         return (this.initialValue[row][col] == 1);
     }
 
-    public boolean isValidInsert(int row, int col, int value) {
+
+    public List<Cell> checkViolation(int row, int col, int value) {
+        List<Cell> cells = new ArrayList<>();
+        isValidInsert = true;
         int xCell;
         for(xCell = 0; xCell < SUDOKU_SIZE; ++xCell) {
             if (xCell != col && this.sudokuBoard[row][xCell] == value) {
-                return false;
+                cells.add(new Cell(row, xCell));
+                isValidInsert = false;
             }
         }
 
         for(xCell = 0; xCell < SUDOKU_SIZE; ++xCell) {
             if (xCell != row && this.sudokuBoard[xCell][col] == value) {
-                return false;
+                cells.add(new Cell(xCell, col));
+                isValidInsert = false;
+
             }
         }
 
@@ -123,24 +131,18 @@ public class Level {
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 3; ++j) {
                 if (this.sudokuBoard[3 * yGrid + j][3 * xGrid + i] == value) {
-                    return false;
+                    cells.add(new Cell(3 * yGrid + j, 3 * xGrid + i));
+                    isValidInsert = false;
                 }
             }
         }
-        return true;
+
+        return cells;
     }
 
-
-    public List<Cell> checkViolation(int value) {
-        List<Cell> cells = new ArrayList<>();
-        for (int i = 0; i < sudokuBoard.length; i++) {
-            for (int j = 0; j < sudokuBoard[i].length; j++) {
-                if (sudokuBoard[i][j] == value) {
-                    cells.add(new Cell(i, j));
-                }
-            }
-        }
-        return cells;
+    private boolean isValidInsert(int row, int col, int value){
+        checkViolation(row, col, value);
+        return isValidInsert;
     }
 
 }

@@ -153,6 +153,8 @@
 }
 
 .mistakeCell{
+    -fx-border-color: black;
+    -fx-border-width: 0.5;
     -fx-text-fill: red;
-    -fx-background-color: #f7b2c1;
+    -fx-background-color: #F6D9D9;
 }

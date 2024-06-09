@@ -82,7 +82,7 @@ public class SudokuController implements Initializable{
                             int col = select % SUDOKU_SIZE;
                             int value = Integer.parseInt(textfield.getText());
                             game.getLevel().insert(row, col, value);
-                            alertIfMistake(row,col,value);
+                            alertIfMistake(row, col, value);
                         }
                     }
                 }
@@ -97,7 +97,7 @@ public class SudokuController implements Initializable{
 
     private void alertIfMistake(int row, int col, int value){
         if(!game.getLevel().insert(row, col, value)){
-            List<Cell> cells = game.getLevel().checkViolation(value);
+            List<Cell> cells = game.getLevel().checkViolation(row, col, value);
             for(Cell cell : cells){
                 TextField textField = (TextField) sudokuBoard.getChildren().get(SUDOKU_SIZE * cell.getX() + cell.getY() + 1);
                 textField.getStyleClass().add("mistakeCell");
@@ -108,7 +108,6 @@ public class SudokuController implements Initializable{
         for (int row = 0; row < SUDOKU_SIZE; row++) {
             for (int col = 0; col < SUDOKU_SIZE; col++) {
                 drawCell(row, col, game.getLevel().getElement(row, col));
-
             }
         }}
     private void drawCell(int row, int col, int val) {
@@ -121,6 +120,7 @@ public class SudokuController implements Initializable{
         }
         if (!game.getLevel().isOccupied(row, col)) {
             textField.getStyleClass().removeAll("textFieldOccupied");
+            textField.getStyleClass().removeAll("mistakeCell");
             textField.getStyleClass().add("textFieldUnoccupied");
             textField.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
