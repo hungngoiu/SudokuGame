@@ -151,3 +151,8 @@
 
     -fx-text-fill: #307DF6;
 }
+
+.mistakeCell{
+    -fx-text-fill: red;
+    -fx-background-color: #f7b2c1;
+}

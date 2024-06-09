@@ -2,10 +2,13 @@ package com.example.sudokugame.core;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.effect.Light;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import static com.example.sudokugame.util.Constants.*;
@@ -35,13 +38,12 @@ class Move {
 
     public int getNewValue() {return newValue;}
 }
+
 public class Level {
     private int[][] sudokuBoard;
     private int[][] initialValue;
     Stack<Move> moveStack;
     Stack<Move> redoStack;
-
-
 
     public Level(int[][] sudokuBoard) {
         this.moveStack = new Stack<>();
@@ -129,5 +131,16 @@ public class Level {
     }
 
 
+    public List<Cell> checkViolation(int value) {
+        List<Cell> cells = new ArrayList<>();
+        for (int i = 0; i < sudokuBoard.length; i++) {
+            for (int j = 0; j < sudokuBoard[i].length; j++) {
+                if (sudokuBoard[i][j] == value) {
+                    cells.add(new Cell(i, j));
+                }
+            }
+        }
+        return cells;
+    }
 
 }
