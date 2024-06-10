@@ -1,8 +1,18 @@
 package com.example.sudokugame.core;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.effect.Light;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
-import static com.example.sudokugame.util.Constants.SUDOKU_SIZE;
+import static com.example.sudokugame.util.Constants.*;
+
 class Move {
     private int row;
     private int col;
@@ -28,12 +38,14 @@ class Move {
 
     public int getNewValue() {return newValue;}
 }
+
 public class Level {
     private int[][] sudokuBoard;
     private int[][] initialValue;
     Stack<Move> moveStack;
     Stack<Move> redoStack;
-
+    private boolean isValidInsert = true;
+    private int mistakeCount;
 
     public Level(int[][] sudokuBoard) {
         this.moveStack = new Stack<>();
@@ -61,7 +73,7 @@ public class Level {
     }
 
     public boolean insert(int row, int col, int value) {
-        if (!this.isOccupied(row, col) && this.isValidInsert(row, col, value)) {
+        if(!this.isOccupied(row, col) && isValidInsert(row, col, value)) {
             Move move = new Move(row, col, sudokuBoard[row][col], value);
             this.moveStack.push(move);
             this.redoStack.clear();
@@ -93,17 +105,23 @@ public class Level {
         return (this.initialValue[row][col] == 1);
     }
 
-    public boolean isValidInsert(int row, int col, int value) {
+
+    public List<Cell> checkViolation(int row, int col, int value) {
+        List<Cell> cells = new ArrayList<>();
+        isValidInsert = true;
         int xCell;
         for(xCell = 0; xCell < SUDOKU_SIZE; ++xCell) {
             if (xCell != col && this.sudokuBoard[row][xCell] == value) {
-                return false;
+                cells.add(new Cell(row, xCell));
+                isValidInsert = false;
             }
         }
 
         for(xCell = 0; xCell < SUDOKU_SIZE; ++xCell) {
             if (xCell != row && this.sudokuBoard[xCell][col] == value) {
-                return false;
+                cells.add(new Cell(xCell, col));
+                isValidInsert = false;
+
             }
         }
 
@@ -113,10 +131,18 @@ public class Level {
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 3; ++j) {
                 if (this.sudokuBoard[3 * yGrid + j][3 * xGrid + i] == value) {
-                    return false;
+                    cells.add(new Cell(3 * yGrid + j, 3 * xGrid + i));
+                    isValidInsert = false;
                 }
             }
         }
-        return true;
+
+        return cells;
     }
+
+    private boolean isValidInsert(int row, int col, int value){
+        checkViolation(row, col, value);
+        return isValidInsert;
+    }
+
 }

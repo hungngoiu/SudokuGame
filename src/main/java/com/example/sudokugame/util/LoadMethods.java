@@ -1,6 +1,13 @@
 package com.example.sudokugame.util;
 
+import com.example.sudokugame.Main;
 import com.example.sudokugame.core.Level;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
@@ -9,6 +16,8 @@ import java.util.Scanner;
 import static com.example.sudokugame.util.Constants.RESOURCE_ROOT;
 
 public class LoadMethods {
+    private static Stage stage;
+    private static Scene scene;
     public static Level LoadLevel(int level_no) {
         Level level = null;
         URL url = LoadMethods.class.getResource(RESOURCE_ROOT + "levels/" + level_no + ".txt");
@@ -28,4 +37,16 @@ public class LoadMethods {
         }
         return level;
     }
+    public static void switchToScene(ActionEvent event, String fileName) {
+        try {
+            Parent root = FXMLLoader.load(Main.class.getResource(RESOURCE_ROOT + fileName));
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

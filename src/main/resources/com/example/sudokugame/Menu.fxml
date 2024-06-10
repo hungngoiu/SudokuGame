@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="606.0" prefWidth="900.0" stylesheets="@css/sudoku.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sudokugame.ui.MenuController">
+   <top>
+      <AnchorPane prefHeight="63.0" prefWidth="900.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER" />
+   </top>
+   <bottom>
+      <AnchorPane prefHeight="310.0" prefWidth="900.0" style="-fx-background-color: #F4F6FF;" BorderPane.alignment="CENTER">
+         <children>
+            <Label id="instruction" alignment="BASELINE_RIGHT" contentDisplay="CENTER" layoutX="302.0" layoutY="19.0" prefHeight="74.0" prefWidth="314.0" text="You can either play Sudoku or solve the game with a given problem." wrapText="true" />
+            <Button fx:id="playBtn" layoutX="327.0" layoutY="109.0" mnemonicParsing="false" onAction="#switchToPlay" prefHeight="52.0" prefWidth="245.0" text="PLAY" />
+            <Button fx:id="solveBtn" layoutX="326.0" layoutY="177.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="245.0" text="SOLVE" />
+         </children>
+      </AnchorPane>
+   </bottom>
+   <left>
+      <AnchorPane prefHeight="240.0" prefWidth="900.0" style="-fx-background-color: #307DF6;" BorderPane.alignment="CENTER">
+         <children>
+            <Label id="largeLblSudoku" layoutX="283.0" layoutY="101.0" text="Sudoku" />
+            <Pane id="block" layoutX="32.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="blockFade" layoutX="82.0" layoutY="64.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="blockFade" layoutX="132.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="blockFade" layoutX="436.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="blockFade" layoutX="486.0" layoutY="50.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="block" layoutX="536.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="blockFade" layoutX="586.0" layoutY="50.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="blockFade" layoutX="636.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="blockFade" layoutX="736.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="blockFade" layoutX="736.0" layoutY="101.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="block" layoutX="686.0" layoutY="50.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="blockFade" layoutX="786.0" layoutY="50.0" prefHeight="200.0" prefWidth="200.0" />
+            <Pane id="block" layoutX="836.0" prefHeight="200.0" prefWidth="200.0" />
+         </children>
+      </AnchorPane>
+   </left>
+</BorderPane>

@@ -1,23 +1,35 @@
 package com.example.sudokugame.ui;
 
+import com.example.sudokugame.core.Cell;
 import com.example.sudokugame.core.Game;
+import com.example.sudokugame.core.Level;
+import com.example.sudokugame.util.LoadMethods;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import static com.example.sudokugame.util.Constants.RESOURCE_ROOT;
 import static com.example.sudokugame.util.Constants.SUDOKU_SIZE;
 
-public class SudokuController implements Initializable {
+public class SudokuController implements Initializable{
     @FXML
     private GridPane sudokuBoard;
     @FXML
@@ -68,16 +80,29 @@ public class SudokuController implements Initializable {
                             TextField textfield = (TextField) node;
                             int row = select / SUDOKU_SIZE;
                             int col = select % SUDOKU_SIZE;
-                            game.getLevel().insert(row, col, Integer.parseInt(textfield.getText()));
+                            int value = Integer.parseInt(textfield.getText());
+                            game.getLevel().insert(row, col, value);
+                            alertIfMistake(row, col, value);
                         }
                     }
                 }
+
                 select = -1;
                 drawSudokuBoard();
             }
         });
 
 
+    }
+
+    private void alertIfMistake(int row, int col, int value){
+        if(!game.getLevel().insert(row, col, value)){
+            List<Cell> cells = game.getLevel().checkViolation(row, col, value);
+            for(Cell cell : cells){
+                TextField textField = (TextField) sudokuBoard.getChildren().get(SUDOKU_SIZE * cell.getX() + cell.getY() + 1);
+                textField.getStyleClass().add("mistakeCell");
+            }
+        }
     }
     public void drawSudokuBoard() {
         for (int row = 0; row < SUDOKU_SIZE; row++) {
@@ -95,6 +120,7 @@ public class SudokuController implements Initializable {
         }
         if (!game.getLevel().isOccupied(row, col)) {
             textField.getStyleClass().removeAll("textFieldOccupied");
+            textField.getStyleClass().removeAll("mistakeCell");
             textField.getStyleClass().add("textFieldUnoccupied");
             textField.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
@@ -145,5 +171,12 @@ public class SudokuController implements Initializable {
         game.nextLevel();
         drawSudokuBoard();
     }
+
+    @FXML
+    private void backToMenu(ActionEvent event) {
+        LoadMethods.switchToScene(event, "Menu.fxml");
+    }
+
+
 
 }
