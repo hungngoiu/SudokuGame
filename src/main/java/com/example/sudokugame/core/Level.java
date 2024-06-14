@@ -44,8 +44,8 @@ public class Level {
     private int[][] initialValue;
     Stack<Move> moveStack;
     Stack<Move> redoStack;
+    List<Cell> cells = new ArrayList<>();
     private boolean isValidInsert = true;
-    private int mistakeCount;
 
     public Level(int[][] sudokuBoard) {
         this.moveStack = new Stack<>();
@@ -73,7 +73,9 @@ public class Level {
     }
 
     public boolean insert(int row, int col, int value) {
-        if(!this.isOccupied(row, col) && isValidInsert(row, col, value)) {
+        cells.clear();
+        checkViolation(row, col, value);
+        if(!this.isOccupied(row, col) && isValidInsert()) {
             Move move = new Move(row, col, sudokuBoard[row][col], value);
             this.moveStack.push(move);
             this.redoStack.clear();
@@ -106,8 +108,7 @@ public class Level {
     }
 
 
-    public List<Cell> checkViolation(int row, int col, int value) {
-        List<Cell> cells = new ArrayList<>();
+    public void checkViolation(int row, int col, int value) {
         isValidInsert = true;
         int xCell;
         for(xCell = 0; xCell < SUDOKU_SIZE; ++xCell) {
@@ -117,6 +118,8 @@ public class Level {
             }
         }
 
+
+
         for(xCell = 0; xCell < SUDOKU_SIZE; ++xCell) {
             if (xCell != row && this.sudokuBoard[xCell][col] == value) {
                 cells.add(new Cell(xCell, col));
@@ -124,6 +127,7 @@ public class Level {
 
             }
         }
+
 
         int xGrid = col / 3;
         int yGrid = row / 3;
@@ -136,12 +140,13 @@ public class Level {
                 }
             }
         }
+    }
 
+    public List<Cell> getCells() {
         return cells;
     }
 
-    private boolean isValidInsert(int row, int col, int value){
-        checkViolation(row, col, value);
+    public boolean isValidInsert(){
         return isValidInsert;
     }
 

@@ -81,8 +81,12 @@ public class SudokuController implements Initializable{
                             int row = select / SUDOKU_SIZE;
                             int col = select % SUDOKU_SIZE;
                             int value = Integer.parseInt(textfield.getText());
-                            game.getLevel().insert(row, col, value);
+                            removeAllAlert();
                             alertIfMistake(row, col, value);
+                            game.getLevel().insert(row, col, value);
+
+
+
                         }
                     }
                 }
@@ -94,11 +98,20 @@ public class SudokuController implements Initializable{
 
 
     }
+    private void removeAllAlert(){
+        for (int row = 0; row < SUDOKU_SIZE; row++) {
+            for (int col = 0; col < SUDOKU_SIZE; col++) {
+                TextField textField = (TextField) sudokuBoard.getChildren().get(SUDOKU_SIZE * row + col + 1);
+                textField.getStyleClass().removeAll("mistakeCell");
+            }
+        }
+    }
 
     private void alertIfMistake(int row, int col, int value){
         if(!game.getLevel().insert(row, col, value)){
-            List<Cell> cells = game.getLevel().checkViolation(row, col, value);
+            List<Cell> cells = game.getLevel().getCells();
             for(Cell cell : cells){
+                System.out.println(cell.getX() + " " + cell.getY());
                 TextField textField = (TextField) sudokuBoard.getChildren().get(SUDOKU_SIZE * cell.getX() + cell.getY() + 1);
                 textField.getStyleClass().add("mistakeCell");
             }
@@ -118,9 +131,12 @@ public class SudokuController implements Initializable{
         else {
             textField.setText("");
         }
+        if(game.getLevel().isValidInsert()){
+            textField.getStyleClass().removeAll("mistakeCell");
+        }
         if (!game.getLevel().isOccupied(row, col)) {
             textField.getStyleClass().removeAll("textFieldOccupied");
-            textField.getStyleClass().removeAll("mistakeCell");
+
             textField.getStyleClass().add("textFieldUnoccupied");
             textField.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
