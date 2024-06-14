@@ -1,32 +1,26 @@
 package com.example.sudokugame.ui;
 
-import com.example.sudokugame.core.Cell;
 import com.example.sudokugame.core.Game;
-import com.example.sudokugame.core.Level;
 import com.example.sudokugame.util.LoadMethods;
+import com.example.sudokugame.util.Pair;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.scene.text.Text;
 
-import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static com.example.sudokugame.util.Constants.RESOURCE_ROOT;
 import static com.example.sudokugame.util.Constants.SUDOKU_SIZE;
 
 public class SudokuController implements Initializable{
@@ -81,39 +75,32 @@ public class SudokuController implements Initializable{
                             int row = select / SUDOKU_SIZE;
                             int col = select % SUDOKU_SIZE;
                             int value = Integer.parseInt(textfield.getText());
-                            removeAllAlert();
-                            alertIfMistake(row, col, value);
-                            game.getLevel().insert(row, col, value);
-
-
-
+                            ArrayList<Pair<Integer, Integer>> row_col_pairs = new ArrayList<>();
+                            game.getLevel().insert(row, col, value, row_col_pairs);
+                            clearAllMistake();
+                            markAsMistake(row_col_pairs);
                         }
                     }
                 }
-
                 select = -1;
                 drawSudokuBoard();
             }
         });
-
-
     }
-    private void removeAllAlert(){
-        for (int row = 0; row < SUDOKU_SIZE; row++) {
-            for (int col = 0; col < SUDOKU_SIZE; col++) {
-                TextField textField = (TextField) sudokuBoard.getChildren().get(SUDOKU_SIZE * row + col + 1);
-                textField.getStyleClass().removeAll("mistakeCell");
-            }
+
+    private void markAsMistake(ArrayList<Pair<Integer, Integer>> rowColPairs) {
+        List<Node> textFields = sudokuBoard.getChildren();
+        for (Pair<Integer, Integer> pair : rowColPairs) {
+            TextField textField = (TextField) textFields.get(SUDOKU_SIZE * pair.getFirst() + pair.getSecond() + 1);
+            textField.getStyleClass().add("mistakeCell");
         }
     }
-
-    private void alertIfMistake(int row, int col, int value){
-        if(!game.getLevel().insert(row, col, value)){
-            List<Cell> cells = game.getLevel().getCells();
-            for(Cell cell : cells){
-                System.out.println(cell.getX() + " " + cell.getY());
-                TextField textField = (TextField) sudokuBoard.getChildren().get(SUDOKU_SIZE * cell.getX() + cell.getY() + 1);
-                textField.getStyleClass().add("mistakeCell");
+    private void clearAllMistake() {
+        List<Node> textFields = sudokuBoard.getChildren();
+        for (int row = 0; row < SUDOKU_SIZE; row++) {
+            for (int col = 0; col < SUDOKU_SIZE; col++) {
+                TextField textField = (TextField) textFields.get(SUDOKU_SIZE * row + col + 1);
+                textField.getStyleClass().removeAll("mistakeCell");
             }
         }
     }
@@ -130,9 +117,6 @@ public class SudokuController implements Initializable{
         }
         else {
             textField.setText("");
-        }
-        if(game.getLevel().isValidInsert()){
-            textField.getStyleClass().removeAll("mistakeCell");
         }
         if (!game.getLevel().isOccupied(row, col)) {
             textField.getStyleClass().removeAll("textFieldOccupied");
@@ -161,6 +145,7 @@ public class SudokuController implements Initializable{
     }
     @FXML
     private void undo() {
+        clearAllMistake();
         select = -1;
         if (game.getLevel().undo()) {
             drawSudokuBoard();
@@ -177,12 +162,14 @@ public class SudokuController implements Initializable{
     }
     @FXML
     private void restart() {
+        clearAllMistake();
         resetSelect();
         game.loadLevel();
         drawSudokuBoard();
     }
     @FXML
     private void newGame() {
+        clearAllMistake();
         resetSelect();
         game.nextLevel();
         drawSudokuBoard();

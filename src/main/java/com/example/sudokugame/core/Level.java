@@ -1,5 +1,6 @@
 package com.example.sudokugame.core;
 
+import com.example.sudokugame.util.Pair;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.effect.Light;
@@ -44,8 +45,6 @@ public class Level {
     private int[][] initialValue;
     Stack<Move> moveStack;
     Stack<Move> redoStack;
-    List<Cell> cells = new ArrayList<>();
-    private boolean isValidInsert = true;
 
     public Level(int[][] sudokuBoard) {
         this.moveStack = new Stack<>();
@@ -73,9 +72,7 @@ public class Level {
     }
 
     public boolean insert(int row, int col, int value) {
-        cells.clear();
-        checkViolation(row, col, value);
-        if(!this.isOccupied(row, col) && isValidInsert()) {
+        if(!this.isOccupied(row, col) && isValidInsert(row, col, value)) {
             Move move = new Move(row, col, sudokuBoard[row][col], value);
             this.moveStack.push(move);
             this.redoStack.clear();
@@ -84,6 +81,39 @@ public class Level {
         } else {
             return false;
         }
+    }
+    public boolean insert(int row, int col, int value, ArrayList<Pair<Integer, Integer>> row_col_violate_cells) {
+        if (insert(row, col, value)) {
+            return true;
+        }
+        else {
+            for(int xCell = 0; xCell < SUDOKU_SIZE; ++xCell) {
+                if (xCell != col && this.sudokuBoard[row][xCell] == value) {
+                    row_col_violate_cells.add(new Pair<>(row, xCell));
+                }
+            }
+
+            for(int yCell = 0; yCell < SUDOKU_SIZE; ++yCell) {
+                if (yCell != row && this.sudokuBoard[yCell][col] == value) {
+                    row_col_violate_cells.add(new Pair<>(yCell, col));
+                }
+            }
+
+            int xGrid = col / 3;
+            int yGrid = row / 3;
+
+            for(int i = 0; i < 3; ++i) {
+                for(int j = 0; j < 3; ++j) {
+                    if (3 * yGrid + j == row && 3 * xGrid + i == col) {
+                        continue;
+                    }
+                    if (this.sudokuBoard[3 * yGrid + j][3 * xGrid + i] == value) {
+                        row_col_violate_cells.add(new Pair<>(3 * yGrid + j, 3 * xGrid + i));
+                    }
+                }
+            }
+        }
+        return false;
     }
     public boolean undo() {
         if (!moveStack.isEmpty()) {
@@ -108,46 +138,33 @@ public class Level {
     }
 
 
-    public void checkViolation(int row, int col, int value) {
-        isValidInsert = true;
-        int xCell;
-        for(xCell = 0; xCell < SUDOKU_SIZE; ++xCell) {
+    public boolean isValidInsert(int row, int col, int value){
+        for(int xCell = 0; xCell < SUDOKU_SIZE; ++xCell) {
             if (xCell != col && this.sudokuBoard[row][xCell] == value) {
-                cells.add(new Cell(row, xCell));
-                isValidInsert = false;
+                return false;
             }
         }
 
-
-
-        for(xCell = 0; xCell < SUDOKU_SIZE; ++xCell) {
-            if (xCell != row && this.sudokuBoard[xCell][col] == value) {
-                cells.add(new Cell(xCell, col));
-                isValidInsert = false;
-
+        for(int yCell = 0; yCell < SUDOKU_SIZE; ++yCell) {
+            if (yCell != row && this.sudokuBoard[yCell][col] == value) {
+                return false;
             }
         }
-
 
         int xGrid = col / 3;
         int yGrid = row / 3;
 
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 3; ++j) {
+                if (3 * yGrid + j == row && 3 * xGrid + i == col) {
+                    continue;
+                }
                 if (this.sudokuBoard[3 * yGrid + j][3 * xGrid + i] == value) {
-                    cells.add(new Cell(3 * yGrid + j, 3 * xGrid + i));
-                    isValidInsert = false;
+                    return false;
                 }
             }
         }
-    }
-
-    public List<Cell> getCells() {
-        return cells;
-    }
-
-    public boolean isValidInsert(){
-        return isValidInsert;
+        return true;
     }
 
 }
