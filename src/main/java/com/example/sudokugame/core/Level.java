@@ -71,8 +71,28 @@ public class Level {
     }
 
     public void hint(int row, int col) {
-        sudokuBoard[row][col] = result[row][col];
+        int value = result[row][col];
+        sudokuBoard[row][col] = value;
         initialValue[row][col] = 1;
+        for (int i = 0; i < SUDOKU_SIZE; ++i) {
+            if (sudokuBoard[row][i] == value && i != col) {
+                sudokuBoard[row][i] = 0;
+            }
+        }
+        for (int i = 0; i < SUDOKU_SIZE; ++i) {
+            if (sudokuBoard[i][col] == value && i != row) {
+                sudokuBoard[i][col] = 0;
+            }
+        }
+        int xGrid = col / 3;
+        int yGrid = row / 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (sudokuBoard[yGrid * 3 + j][xGrid * 3 + i] == value && !(yGrid * 3 + j == row && xGrid * 3 + i == col)) {
+                    sudokuBoard[yGrid * 3 + j][xGrid * 3 + i] = 0;
+                }
+            }
+        }
     }
     public void setElement(int row, int col, int value) {
         this.sudokuBoard[row][col] = value;
