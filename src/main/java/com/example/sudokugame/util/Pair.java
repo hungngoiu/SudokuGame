@@ -17,5 +17,12 @@ public class Pair<U, V> {
     public V getSecond() {
         return second;
     }
+
+    public void setFirst(U first) {
+        this.first = first;
+    }
+
+    public void setSecond(V second) {
+        this.second = second;
+    }
 }
-//getter for first and second
