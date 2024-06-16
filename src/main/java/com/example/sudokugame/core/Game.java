@@ -1,8 +1,13 @@
 package com.example.sudokugame.core;
 
+import com.example.sudokugame.Main;
 import com.example.sudokugame.ui.SudokuController;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -10,11 +15,12 @@ import java.io.IOException;
 
 import static com.example.sudokugame.util.Constants.LEVELS_NUMBER;
 import static com.example.sudokugame.util.Constants.RESOURCE_ROOT;
-import static com.example.sudokugame.util.LoadMethods.LoadLevel;
+import static com.example.sudokugame.util.LoadMethods.*;
 
 public final class Game {
     private static final Game INSTANCE = new Game();
     private Stage stage;
+
     private Level level;
     private int levelIndex;
 
@@ -36,6 +42,7 @@ public final class Game {
         SudokuController controller = loader.getController();
         stage.setScene(scene);
         stage.show();
+
     }
     public void loadLevel() {
         level = LoadLevel(levelIndex);
@@ -52,4 +59,7 @@ public final class Game {
         loadLevel();
     }
 
+    public Stage getStage() {
+        return stage;
+    }
 }

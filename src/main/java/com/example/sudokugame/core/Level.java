@@ -45,6 +45,8 @@ public class Level {
     private int[][] sudokuBoard;
     private int[][] initialValue;
     private int[][] result;
+    private int mistakeCount;
+
     Stack<Move> moveStack;
     Stack<Move> redoStack;
 
@@ -140,6 +142,8 @@ public class Level {
                     }
                 }
             }
+            mistakeCount++;
+            System.out.println(mistakeCount);
         }
         return false;
     }
@@ -195,4 +199,11 @@ public class Level {
         return true;
     }
 
+    public boolean isGameOver() {
+        return mistakeCount >= MAX_MISTAKES;
+    }
+
+    public boolean isFinished(){
+
+    }
 }

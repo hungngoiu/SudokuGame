@@ -1,5 +1,6 @@
 package com.example.sudokugame.ui;
 
+import com.example.sudokugame.Main;
 import com.example.sudokugame.core.Game;
 import com.example.sudokugame.util.LoadMethods;
 import com.example.sudokugame.util.Pair;
@@ -7,23 +8,32 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static com.example.sudokugame.util.Constants.SUDOKU_SIZE;
+import static com.example.sudokugame.util.Constants.*;
 
 public class SudokuController implements Initializable{
+
+    @FXML
+    private AnchorPane mainPane;
     @FXML
     private GridPane sudokuBoard;
     @FXML
@@ -34,6 +44,8 @@ public class SudokuController implements Initializable{
     private Button redoButton;
     @FXML
     private Button hintButton;
+    private Stage popUpStage;
+    private Scene scene;
     private Game game = Game.getInstance();
     private int select = -1;
 
@@ -81,6 +93,10 @@ public class SudokuController implements Initializable{
                             game.getLevel().insert(row, col, value, row_col_pairs);
                             clearAllMistake();
                             markAsMistake(row_col_pairs);
+                            if(game.getLevel().isGameOver()){
+                                sudokuBoard.setDisable(true);
+                                showGameOver();
+                            }
                         }
                     }
                 }
@@ -111,7 +127,8 @@ public class SudokuController implements Initializable{
             for (int col = 0; col < SUDOKU_SIZE; col++) {
                 drawCell(row, col, game.getLevel().getElement(row, col));
             }
-        }}
+        }
+    }
     private void drawCell(int row, int col, int val) {
         TextField textField = (TextField) sudokuBoard.getChildren().get(SUDOKU_SIZE * row + col + 1);
         if (val != 0) {
@@ -182,18 +199,45 @@ public class SudokuController implements Initializable{
         drawSudokuBoard();
     }
     @FXML
-    private void newGame() {
+    void newGame() {
         clearAllMistake();
         resetSelect();
         game.nextLevel();
         drawSudokuBoard();
+        sudokuBoard.setDisable(false);
     }
+
+
 
     @FXML
-    private void backToMenu(ActionEvent event) {
-        LoadMethods.switchToScene(event, "Menu.fxml");
+    public void backToMenu(){
+        try {
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource(RESOURCE_ROOT + "Menu.fxml"));
+            BorderPane menuPane = loader.load();
+            mainPane.getChildren().setAll(menuPane);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+    public void showGameOver(){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(RESOURCE_ROOT + "GameOver.fxml"));
+            Parent root = fxmlLoader.load();
 
+            PopUpController controller = fxmlLoader.getController();
+            controller.setMainController(this);
 
+            popUpStage = new Stage();
+            popUpStage.initOwner(game.getStage());
+            popUpStage.initModality(Modality.APPLICATION_MODAL);
+
+            scene = new Scene(root);
+            popUpStage.setScene(scene);
+            popUpStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
