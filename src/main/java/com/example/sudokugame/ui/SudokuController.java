@@ -32,6 +32,8 @@ public class SudokuController implements Initializable{
     private Button undoButton;
     @FXML
     private Button redoButton;
+    @FXML
+    private Button hintButton;
     private Game game = Game.getInstance();
     private int select = -1;
 
@@ -159,6 +161,18 @@ public class SudokuController implements Initializable{
             drawSudokuBoard();
         }
         redoButton.requestFocus();
+    }
+    @FXML
+    private void hint() {
+        if (select == -1)
+                return;
+        int row = select / SUDOKU_SIZE;
+        int col = select % SUDOKU_SIZE;
+        game.getLevel().hint(row, col);
+
+        select = -1;
+        clearAllMistake();
+        drawSudokuBoard();
     }
     @FXML
     private void restart() {

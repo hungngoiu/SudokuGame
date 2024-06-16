@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Stack;
 
 import static com.example.sudokugame.util.Constants.*;
+import static com.example.sudokugame.util.HelpMethods.SolveSudoku;
 
 class Move {
     private int row;
@@ -43,6 +44,7 @@ class Move {
 public class Level {
     private int[][] sudokuBoard;
     private int[][] initialValue;
+    private int[][] result;
     Stack<Move> moveStack;
     Stack<Move> redoStack;
 
@@ -51,6 +53,7 @@ public class Level {
         this.redoStack = new Stack<>();
         this.sudokuBoard = sudokuBoard;
         this.initialValue = new int[SUDOKU_SIZE][SUDOKU_SIZE];
+        this.result = new int[SUDOKU_SIZE][SUDOKU_SIZE];
 
         for(int row = 0; row < SUDOKU_SIZE; ++row) {
             for(int col = 0; col < SUDOKU_SIZE; ++col) {
@@ -61,12 +64,38 @@ public class Level {
                 }
             }
         }
-
+        SolveSudoku(sudokuBoard, result);
     }
     public int getElement(int row, int col) {
         return this.sudokuBoard[row][col];
     }
 
+    public void hint(int row, int col) {
+        int value = result[row][col];
+        sudokuBoard[row][col] = value;
+        initialValue[row][col] = 1;
+        for (int i = 0; i < SUDOKU_SIZE; ++i) {
+            if (sudokuBoard[row][i] == value && i != col) {
+                sudokuBoard[row][i] = 0;
+            }
+        }
+        for (int i = 0; i < SUDOKU_SIZE; ++i) {
+            if (sudokuBoard[i][col] == value && i != row) {
+                sudokuBoard[i][col] = 0;
+            }
+        }
+        int xGrid = col / 3;
+        int yGrid = row / 3;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (sudokuBoard[yGrid * 3 + j][xGrid * 3 + i] == value && !(yGrid * 3 + j == row && xGrid * 3 + i == col)) {
+                    sudokuBoard[yGrid * 3 + j][xGrid * 3 + i] = 0;
+                }
+            }
+        }
+        moveStack.clear();
+        redoStack.clear();
+    }
     public void setElement(int row, int col, int value) {
         this.sudokuBoard[row][col] = value;
     }
