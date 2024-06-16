@@ -30,6 +30,7 @@ public class HelpMethods {
         }
         return false;
     }
+
     private static Pair<Integer, Integer> FindNextEmptyCell(int[][] sudokuBoard) {
         Pair<Integer, Integer> row_col_pair = null;
         for (int i = 0; i < SUDOKU_SIZE; i++) {
