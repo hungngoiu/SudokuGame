@@ -32,15 +32,14 @@ public class HelpMethods {
     }
 
     public static Pair<Integer, Integer> FindNextEmptyCell(int[][] sudokuBoard) {
-        Pair<Integer, Integer> row_col_pair = null;
         for (int i = 0; i < SUDOKU_SIZE; i++) {
             for (int j = 0; j < SUDOKU_SIZE; j++) {
                 if (sudokuBoard[i][j] == 0) {
-                    row_col_pair = new Pair(i, j);
+                    return new Pair(i, j);
                 }
             }
         }
-        return row_col_pair;
+        return null;
     }
     private static boolean IsValidInsert(int[][] sudokuBoard, int row, int col, int value) {
         for (int i = 0; i < SUDOKU_SIZE; i++) {

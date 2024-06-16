@@ -15,6 +15,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -100,7 +101,6 @@ public class SudokuController implements Initializable{
                 select = -1;
                 drawSudokuBoard();
                 if(game.getLevel().isGameOver()){
-                    sudokuBoard.setDisable(true);
                     showGameOver();
                 }
                 if(game.getLevel().isFinished()){
@@ -196,6 +196,18 @@ public class SudokuController implements Initializable{
         drawSudokuBoard();
     }
     @FXML
+    private void erase() {
+        if (select != -1) {
+            int row = select / SUDOKU_SIZE;
+            int col = select % SUDOKU_SIZE;
+            if (game.getLevel().erase(row, col)) {
+                drawSudokuBoard();
+            }
+            select = -1;
+            eraseButton.requestFocus();
+        }
+    }
+    @FXML
     private void restart() {
         clearAllMistake();
         resetSelect();
@@ -223,7 +235,9 @@ public class SudokuController implements Initializable{
             e.printStackTrace();
         }
     }
+
     private void showGameOver(){
+        sudokuBoard.setDisable(true);
         loadPopUpPane("GameOver.fxml");
     }
     private void showGameFinished(){
@@ -248,18 +262,6 @@ public class SudokuController implements Initializable{
 
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-    @FXML
-    private void erase() {
-        if (select != -1) {
-            int row = select / SUDOKU_SIZE;
-            int col = select % SUDOKU_SIZE;
-            if (game.getLevel().erase(row, col)) {
-                drawSudokuBoard();
-            }
-            select = -1;
-            eraseButton.requestFocus();
         }
     }
 
