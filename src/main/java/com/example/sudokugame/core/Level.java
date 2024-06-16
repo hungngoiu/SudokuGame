@@ -145,4 +145,15 @@ public class Level {
         return isValidInsert;
     }
 
+    public boolean erase(int row, int col) {
+        if (!isOccupied(row, col)) {
+            Move move = new Move(row, col, sudokuBoard[row][col], 0);
+            this.moveStack.push(move);
+            this.redoStack.clear();
+            this.sudokuBoard[row][col] = 0;
+            return true;
+        }
+        return false;
+    }
+
 }

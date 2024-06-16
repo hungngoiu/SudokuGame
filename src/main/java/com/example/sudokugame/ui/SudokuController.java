@@ -38,6 +38,8 @@ public class SudokuController implements Initializable{
     private Button undoButton;
     @FXML
     private Button redoButton;
+    @FXML
+    private Button eraseButton;
     private Game game = Game.getInstance();
     private int select = -1;
 
@@ -177,6 +179,17 @@ public class SudokuController implements Initializable{
         LoadMethods.switchToScene(event, "Menu.fxml");
     }
 
-
+    @FXML
+    private void erase() {
+        if (select != -1) {
+            int row = select / SUDOKU_SIZE;
+            int col = select % SUDOKU_SIZE;
+            if (game.getLevel().erase(row, col)) {
+                drawSudokuBoard();
+            }
+            select = -1;
+            eraseButton.requestFocus();
+        }
+    }
 
 }

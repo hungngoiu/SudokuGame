@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane fx:id="backBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#resetSelect" prefHeight="606.0" prefWidth="900.0" styleClass="background" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sudokugame.ui.SudokuController">
+<AnchorPane fx:id="backBtn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#resetSelect" prefHeight="606.0" prefWidth="900.0" styleClass="background" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sudokugame.ui.SudokuController">
     <stylesheets>
         <URL value="@css/sudoku.css" />
     </stylesheets>
@@ -68,5 +68,6 @@
       <Button fx:id="redoButton" layoutX="699.0" layoutY="134.0" mnemonicParsing="false" onAction="#redo" prefHeight="39.0" prefWidth="81.0" text="Redo" />
       <Button layoutX="859.0" layoutY="1.0" mnemonicParsing="false" onAction="#backToMenu" text="Back" />
       <Button fx:id="restart" focusTraversable="false" layoutX="599.0" layoutY="71.0" mnemonicParsing="false" onAction="#restart" prefHeight="39.0" prefWidth="90.0" text="Restart" />
+      <Button fx:id="eraseButton" focusTraversable="false" layoutX="699.0" layoutY="71.0" mnemonicParsing="false" onAction="#erase" prefHeight="39.0" prefWidth="90.0" text="Erase" />
    </children>
 </AnchorPane>
