@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Stack;
 
 import static com.example.sudokugame.util.Constants.*;
+import static com.example.sudokugame.util.HelpMethods.FindNextEmptyCell;
 import static com.example.sudokugame.util.HelpMethods.SolveSudoku;
 
 class Move {
@@ -45,6 +46,8 @@ public class Level {
     private int[][] sudokuBoard;
     private int[][] initialValue;
     private int[][] result;
+    private int mistakeCount;
+
     Stack<Move> moveStack;
     Stack<Move> redoStack;
 
@@ -93,8 +96,7 @@ public class Level {
                 }
             }
         }
-        moveStack.clear();
-        redoStack.clear();
+        this.moveStack.clear();
     }
     public void setElement(int row, int col, int value) {
         this.sudokuBoard[row][col] = value;
@@ -141,6 +143,7 @@ public class Level {
                     }
                 }
             }
+            mistakeCount++;
         }
         return false;
     }
@@ -196,4 +199,25 @@ public class Level {
         return true;
     }
 
+    public boolean isGameOver() {
+        return mistakeCount >= MAX_MISTAKES;
+    }
+
+    public boolean isFinished() {
+        if (FindNextEmptyCell(sudokuBoard) == null) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean erase(int row, int col) {
+        if (!isOccupied(row, col)) {
+            Move move = new Move(row, col, sudokuBoard[row][col], 0);
+            this.moveStack.push(move);
+            this.redoStack.clear();
+            this.sudokuBoard[row][col] = 0;
+            return true;
+        }
+        return false;
+    }
 }

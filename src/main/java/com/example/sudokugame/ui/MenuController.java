@@ -1,6 +1,7 @@
 package com.example.sudokugame.ui;
 
 import com.example.sudokugame.core.Game;
+import com.example.sudokugame.util.LoadMethods;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,6 +13,8 @@ import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+
+import static com.example.sudokugame.util.LoadMethods.SwitchToScene;
 
 public class MenuController {
     private Stage stage;
@@ -26,6 +29,6 @@ public class MenuController {
     }
     @FXML
     private void switchToSolve(ActionEvent event){
-
+        SwitchToScene(event, "Solve.fxml");
     }
 }

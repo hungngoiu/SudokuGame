@@ -30,7 +30,8 @@ public class HelpMethods {
         }
         return false;
     }
-    private static Pair<Integer, Integer> FindNextEmptyCell(int[][] sudokuBoard) {
+
+    public static Pair<Integer, Integer> FindNextEmptyCell(int[][] sudokuBoard) {
         for (int i = 0; i < SUDOKU_SIZE; i++) {
             for (int j = 0; j < SUDOKU_SIZE; j++) {
                 if (sudokuBoard[i][j] == 0) {

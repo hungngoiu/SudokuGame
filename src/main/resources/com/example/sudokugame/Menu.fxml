@@ -15,7 +15,7 @@
          <children>
             <Label id="instruction" fx:id="instruction" alignment="BASELINE_RIGHT" contentDisplay="CENTER" layoutX="302.0" layoutY="19.0" prefHeight="74.0" prefWidth="314.0" text="You can either play Sudoku or solve the game with a given problem." wrapText="true" />
             <Button fx:id="playBtn" layoutX="327.0" layoutY="109.0" mnemonicParsing="false" onAction="#switchToPlay" prefHeight="52.0" prefWidth="245.0" text="PLAY" />
-            <Button fx:id="solveBtn" layoutX="326.0" layoutY="177.0" mnemonicParsing="false" prefHeight="52.0" prefWidth="245.0" text="SOLVE" />
+            <Button fx:id="solveBtn" layoutX="326.0" layoutY="177.0" mnemonicParsing="false" onAction="#switchToSolve" prefHeight="52.0" prefWidth="245.0" text="SOLVE" />
          </children>
       </AnchorPane>
    </bottom>

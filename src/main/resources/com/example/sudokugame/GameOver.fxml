@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="250.0" prefWidth="350.0" style="-fx-background-color: #F4F6FF;" stylesheets="@css/sudoku.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="250.0" prefWidth="350.0" style="-fx-background-color: #F4F6FF;" stylesheets="@css/sudoku.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.sudokugame.ui.PopUpController">
    <children>
       <Label id="lblGameOver" layoutX="62.0" layoutY="47.0" prefHeight="58.0" prefWidth="226.0" text="GAME OVER!" />
-      <Button fx:id="menuBtn" layoutX="20.0" layoutY="157.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="154.0" styleClass="gameOverButton" text="MENU" />
-      <Button fx:id="newGameBtn" layoutX="176.0" layoutY="157.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="154.0" styleClass="gameOverButton" text="NEW GAME" />
+      <Button fx:id="menuBtn" layoutX="20.0" layoutY="157.0" mnemonicParsing="false" onAction="#switchToMenu" prefHeight="50.0" prefWidth="154.0" styleClass="gameOverButton" text="MENU" />
+      <Button fx:id="newGameBtn" layoutX="176.0" layoutY="157.0" mnemonicParsing="false" onAction="#newGame" prefHeight="50.0" prefWidth="154.0" styleClass="gameOverButton" text="NEW GAME" />
       <Label id="instruction" layoutX="49.0" layoutY="108.0" prefHeight="26.0" prefWidth="252.0" text="You have made three mistakes!">
          <font>
             <Font size="14.0" />
