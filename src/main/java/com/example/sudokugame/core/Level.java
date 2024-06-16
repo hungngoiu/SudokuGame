@@ -144,7 +144,6 @@ public class Level {
                 }
             }
             mistakeCount++;
-            System.out.println(mistakeCount);
         }
         return false;
     }
@@ -204,8 +203,19 @@ public class Level {
         return mistakeCount >= MAX_MISTAKES;
     }
 
-    public boolean isFinished(){
-        if(FindNextEmptyCell(sudokuBoard) == null){
+    public boolean isFinished() {
+        if (FindNextEmptyCell(sudokuBoard) == null) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean erase(int row, int col) {
+        if (!isOccupied(row, col)) {
+            Move move = new Move(row, col, sudokuBoard[row][col], 0);
+            this.moveStack.push(move);
+            this.redoStack.clear();
+            this.sudokuBoard[row][col] = 0;
             return true;
         }
         return false;

@@ -45,6 +45,8 @@ public class SudokuController implements Initializable{
     @FXML
     private Button hintButton;
     private Scene scene;
+    @FXML
+    private Button eraseButton;
     private Game game = Game.getInstance();
     private int select = -1;
 
@@ -224,12 +226,11 @@ public class SudokuController implements Initializable{
     private void showGameOver(){
         loadPopUpPane("GameOver.fxml");
     }
-
     private void showGameFinished(){
         loadPopUpPane("GameFinished.fxml");
     }
 
-    public void loadPopUpPane(String fileName){
+    public void loadPopUpPane(String fileName) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(RESOURCE_ROOT + fileName));
             Parent root = fxmlLoader.load();
@@ -247,6 +248,18 @@ public class SudokuController implements Initializable{
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    @FXML
+    private void erase() {
+        if (select != -1) {
+            int row = select / SUDOKU_SIZE;
+            int col = select % SUDOKU_SIZE;
+            if (game.getLevel().erase(row, col)) {
+                drawSudokuBoard();
+            }
+            select = -1;
+            eraseButton.requestFocus();
         }
     }
 
