@@ -96,7 +96,8 @@ public class Level {
                 }
             }
         }
-        this.moveStack.clear();
+        moveStack.clear();
+        redoStack.clear();
     }
     public void setElement(int row, int col, int value) {
         this.sudokuBoard[row][col] = value;
