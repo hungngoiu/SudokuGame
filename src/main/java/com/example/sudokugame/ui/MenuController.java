@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import static com.example.sudokugame.util.LoadMethods.SwitchToScene;
+
 public class MenuController {
     private Stage stage;
     @FXML
@@ -27,6 +29,6 @@ public class MenuController {
     }
     @FXML
     private void switchToSolve(ActionEvent event){
-        LoadMethods.switchToScene(event, "Solve.fxml");
+        SwitchToScene(event, "Solve.fxml");
     }
 }

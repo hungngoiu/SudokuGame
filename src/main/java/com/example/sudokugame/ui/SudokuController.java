@@ -44,7 +44,6 @@ public class SudokuController implements Initializable{
     private Button redoButton;
     @FXML
     private Button hintButton;
-    private Stage popUpStage;
     private Scene scene;
     private Game game = Game.getInstance();
     private int select = -1;
@@ -93,15 +92,18 @@ public class SudokuController implements Initializable{
                             game.getLevel().insert(row, col, value, row_col_pairs);
                             clearAllMistake();
                             markAsMistake(row_col_pairs);
-                            if(game.getLevel().isGameOver()){
-                                sudokuBoard.setDisable(true);
-                                showGameOver();
-                            }
                         }
                     }
                 }
                 select = -1;
                 drawSudokuBoard();
+                if(game.getLevel().isGameOver()){
+                    sudokuBoard.setDisable(true);
+                    showGameOver();
+                }
+                if(game.getLevel().isFinished()){
+                    showGameFinished();
+                }
             }
         });
     }
@@ -219,16 +221,24 @@ public class SudokuController implements Initializable{
             e.printStackTrace();
         }
     }
-    public void showGameOver(){
+    private void showGameOver(){
+        loadPopUpPane("GameOver.fxml");
+    }
+
+    private void showGameFinished(){
+        loadPopUpPane("GameFinished.fxml");
+    }
+
+    public void loadPopUpPane(String fileName){
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(RESOURCE_ROOT + "GameOver.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource(RESOURCE_ROOT + fileName));
             Parent root = fxmlLoader.load();
 
             PopUpController controller = fxmlLoader.getController();
             controller.setMainController(this);
 
-            popUpStage = new Stage();
-            popUpStage.initOwner(game.getStage());
+            Stage popUpStage = new Stage();
+            popUpStage.initOwner(Game.getInstance().getStage());
             popUpStage.initModality(Modality.APPLICATION_MODAL);
 
             scene = new Scene(root);

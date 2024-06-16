@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Stack;
 
 import static com.example.sudokugame.util.Constants.*;
+import static com.example.sudokugame.util.HelpMethods.FindNextEmptyCell;
 import static com.example.sudokugame.util.HelpMethods.SolveSudoku;
 
 class Move {
@@ -204,6 +205,9 @@ public class Level {
     }
 
     public boolean isFinished(){
-
+        if(FindNextEmptyCell(sudokuBoard) == null){
+            return true;
+        }
+        return false;
     }
 }
