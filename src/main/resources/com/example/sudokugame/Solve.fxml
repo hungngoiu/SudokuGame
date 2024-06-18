@@ -64,6 +64,6 @@
         <Button fx:id="newGameButton" focusTraversable="false" layoutX="599.0" layoutY="478.0" maxHeight="60.0" mnemonicParsing="false" onAction="#solve" prefHeight="60.0" prefWidth="270.0" text="SOLVE SUDOKU" />
         <Label layoutX="28.0" layoutY="2.0" styleClass="lblSudoku" text="Solve" />
         <Button layoutX="859.0" layoutY="1.0" mnemonicParsing="false" onAction="#backToMenu" text="Back" />
-      <Button layoutX="771.0" layoutY="1.0" mnemonicParsing="false" onAction="#take" text="Import" />
+      <Button fx:id="imprt" layoutX="771.0" layoutY="1.0" mnemonicParsing="false" onAction="#take" text="Import" />
     </children>
 </AnchorPane>
