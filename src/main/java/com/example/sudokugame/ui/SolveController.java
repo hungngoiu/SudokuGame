@@ -1,6 +1,7 @@
 package com.example.sudokugame.ui;
 
 import com.example.sudokugame.core.Level;
+import com.example.sudokugame.util.HelpMethods;
 import com.example.sudokugame.util.LoadMethods;
 import com.example.sudokugame.util.Pair;
 import javafx.event.ActionEvent;
@@ -18,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javax.swing.*;
 
 import static com.example.sudokugame.util.Constants.SUDOKU_SIZE;
 
@@ -43,9 +45,9 @@ public class SolveController implements Initializable {
     }
 
     public void solve(ActionEvent event) {
-        resetSelect();
-        drawSudokuBoardResult();
 
+            resetSelect();
+            drawSudokuBoardResult();
     }
 
     private void resetSelect() {

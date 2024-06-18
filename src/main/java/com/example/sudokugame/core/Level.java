@@ -69,6 +69,9 @@ public class Level {
         }
         SolveSudoku(sudokuBoard, result);
     }
+    public int[][] getInitialValue(){
+        return initialValue;
+    }
     public int getResult(int row, int col){
         return result[row][col];
     }
@@ -223,5 +226,9 @@ public class Level {
             return true;
         }
         return false;
+    }
+
+    public int[][] getResultA() {
+        return result;
     }
 }

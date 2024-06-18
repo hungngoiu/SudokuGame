@@ -12,6 +12,8 @@ public class HelpMethods {
        }
         return SolveSudokuUtil(result);
     }
+
+
     private static boolean SolveSudokuUtil(int[][] sudokuBoard) {
         Pair<Integer, Integer> nextEmptyCell = FindNextEmptyCell(sudokuBoard);
         if (nextEmptyCell == null) {
