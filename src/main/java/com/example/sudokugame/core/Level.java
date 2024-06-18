@@ -69,6 +69,9 @@ public class Level {
         }
         SolveSudoku(sudokuBoard, result);
     }
+    public int getResult(int row, int col){
+        return result[row][col];
+    }
     public int getElement(int row, int col) {
         return this.sudokuBoard[row][col];
     }

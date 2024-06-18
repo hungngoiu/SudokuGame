@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -22,6 +23,25 @@ import static com.example.sudokugame.util.Constants.RESOURCE_ROOT;
 public class LoadMethods {
     private static Stage stage;
     private static Scene scene;
+    public static Level LoadLevelFromFile(){
+        Level level = null;
+        FileChooser chooser = new FileChooser();
+        File file = chooser.showOpenDialog(null);
+        try {
+            Scanner fileReader = new Scanner(file);
+            int[][] values = new int[9][9];
+            for (int y = 0; y < 9; y++) {
+                for (int x = 0; x < 9; x++) {
+                    values[y][x] = fileReader.nextInt();
+                }
+            }
+            level = new Level(values);
+        } catch (IOException e) {
+            System.out.println("Cannot read file");
+            e.printStackTrace();
+        }
+        return level;
+    }
     public static Level LoadLevel(int level_no) {
         Level level = null;
         URL url = LoadMethods.class.getResource(RESOURCE_ROOT + "levels/" + level_no + ".txt");
