@@ -85,6 +85,7 @@ public class SudokuController implements Initializable{
                     return;
                 }
                 for( Node node : insertGrid.getChildren()) {
+
                     if( node instanceof TextField) {
                         if(node.localToScene(node.getBoundsInLocal()).contains(e.getSceneX(), e.getSceneY())) {
                             TextField textfield = (TextField) node;
@@ -93,6 +94,7 @@ public class SudokuController implements Initializable{
                             int value = Integer.parseInt(textfield.getText());
                             ArrayList<Pair<Integer, Integer>> row_col_pairs = new ArrayList<>();
                             game.getLevel().insert(row, col, value, row_col_pairs);
+                            System.out.println("j");
                             clearAllMistake();
                             markAsMistake(row_col_pairs);
                         }

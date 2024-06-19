@@ -61,9 +61,9 @@
                 <TextField editable="false" focusTraversable="false" prefHeight="113.0" prefWidth="90.0" styleClass="textFieldInput" text="9" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             </children>
         </GridPane>
-        <Button fx:id="newGameButton" focusTraversable="false" layoutX="599.0" layoutY="478.0" maxHeight="60.0" mnemonicParsing="false" prefHeight="60.0" prefWidth="270.0" text="SOLVE SUDOKU" />
+        <Button fx:id="newGameButton" focusTraversable="false" layoutX="599.0" layoutY="478.0" maxHeight="60.0" mnemonicParsing="false" onAction="#solve" prefHeight="60.0" prefWidth="270.0" text="SOLVE SUDOKU" />
         <Label layoutX="28.0" layoutY="2.0" styleClass="lblSudoku" text="Solve" />
         <Button layoutX="859.0" layoutY="1.0" mnemonicParsing="false" onAction="#backToMenu" text="Back" />
-      <Button layoutX="771.0" layoutY="1.0" mnemonicParsing="false" text="Import" />
+      <Button fx:id="importBtn" layoutX="771.0" layoutY="1.0" mnemonicParsing="false" onAction="#loadSudokuProblem" text="Import" />
     </children>
 </AnchorPane>
