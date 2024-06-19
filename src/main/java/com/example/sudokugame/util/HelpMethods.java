@@ -1,5 +1,9 @@
 package com.example.sudokugame.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 import static com.example.sudokugame.util.Constants.SUDOKU_SIZE;
 
 public class HelpMethods {
@@ -10,26 +14,59 @@ public class HelpMethods {
                result[row][col] = sudokuBoard[row][col];
            }
        }
-        return SolveSudokuUtil(result);
+        ArrayList<Pair<Integer, ArrayList<Integer>>> blank_cell_valid_input_list = FindBlankCellsList(result); // an array list to store pairs of integer represent a blank cell and a list of valid input from 1 to 9
+        Collections.sort(blank_cell_valid_input_list, new Comparator()
+        {
+            public int compare(Object o1, Object o2)
+            {
+                if (o1 instanceof Pair && o2 instanceof Pair) {
+                    Pair p1 = (Pair) o1;
+                    Pair p2 = (Pair) o2;
+                    if (p1.getSecond() instanceof ArrayList<?> && p2.getSecond() instanceof ArrayList<?>) {
+                        return compare(((ArrayList<?>) p1.getSecond()).size(), ((ArrayList<?>) p2.getSecond()).size());
+                    }
+                }
+                return 0;
+            }
+        });
+        return SolveSudokuUtil(result, blank_cell_valid_input_list);
+    }
+    private static ArrayList<Pair<Integer, ArrayList<Integer>>> FindBlankCellsList(int[][] sudokuBoard) {
+        ArrayList<Pair<Integer, ArrayList<Integer>>> blank_cell_valid_input_list = new ArrayList<>();
+        for (int row = 0; row < SUDOKU_SIZE; row++) {
+            for (int col = 0; col < SUDOKU_SIZE; col++) {
+                if (sudokuBoard[row][col] == 0) {
+                    ArrayList<Integer> valid_inputs = new ArrayList<>();
+                    for (int i = 1; i <= SUDOKU_SIZE; i++) {
+                        if (IsValidInsert(sudokuBoard, row, col, i)) {
+                            valid_inputs.add(i);
+                        }
+                    }
+                    blank_cell_valid_input_list.add(new Pair<>(SUDOKU_SIZE * row + col, valid_inputs));
+                }
+            }
+        }
+        return blank_cell_valid_input_list;
     }
 
-
-    private static boolean SolveSudokuUtil(int[][] sudokuBoard) {
-        Pair<Integer, Integer> nextEmptyCell = FindNextEmptyCell(sudokuBoard);
-        if (nextEmptyCell == null) {
+    private static boolean SolveSudokuUtil(int[][] sudokuBoard, ArrayList<Pair<Integer, ArrayList<Integer>>> blank_cell_valid_input_list) {
+        if (blank_cell_valid_input_list.isEmpty()) {
             return true;
         }
-        int row = nextEmptyCell.getFirst();
-        int col = nextEmptyCell.getSecond();
-        for (int i = 1; i <= SUDOKU_SIZE; i++) {
+        Pair<Integer, ArrayList<Integer>> blank_cell = blank_cell_valid_input_list.removeFirst();
+        int row = blank_cell.getFirst() / SUDOKU_SIZE;
+        int col = blank_cell.getFirst() % SUDOKU_SIZE;
+        ArrayList<Integer> valid_inputs = blank_cell.getSecond();
+        for (int i : valid_inputs) {
             if (IsValidInsert(sudokuBoard, row, col, i)) {
                 sudokuBoard[row][col] = i;
-                if (SolveSudokuUtil(sudokuBoard)) {
+                if (SolveSudokuUtil(sudokuBoard, blank_cell_valid_input_list)) {
                     return true;
                 }
                 sudokuBoard[row][col] = 0;
             }
         }
+        blank_cell_valid_input_list.addFirst(blank_cell);
         return false;
     }
 
