@@ -43,7 +43,7 @@ public class HelpMethods {
         }
         return null;
     }
-    private static boolean IsValidInsert(int[][] sudokuBoard, int row, int col, int value) {
+    public static boolean IsValidInsert(int[][] sudokuBoard, int row, int col, int value) {
         for (int i = 0; i < SUDOKU_SIZE; i++) {
             if (sudokuBoard[row][i] == value) {
                 return false;
