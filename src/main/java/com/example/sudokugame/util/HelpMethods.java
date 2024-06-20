@@ -11,15 +11,52 @@ public class HelpMethods {
                 result[row][col] = sudokuBoard[row][col];
             }
         }
+        ArrayList<Pair<Integer, ArrayList<Integer>>> blankCellList = FindBlankCellsList(result);
+        Stack<Pair<Integer, ArrayList<Integer>>> blankCellStack = new Stack<>();
+        int[] trialsIndexofEachBlankCell = new int[81];
+        int test = 0;
+        while (!blankCellList.isEmpty()) {
+            test++;
+            Pair<Integer, ArrayList<Integer>> blankCell = blankCellList.getFirst();
+            int row = blankCell.getFirst() / SUDOKU_SIZE;
+            int col = blankCell.getFirst() % SUDOKU_SIZE;
+            ArrayList<Integer> validInputs = blankCell.getSecond();
+            boolean existValidInput = false;
+            for (int i = trialsIndexofEachBlankCell[blankCell.getFirst()]; i < validInputs.size(); i++) {
+                int value = validInputs.get(i);
+                if (IsValidInsert(result, row, col, value)) {
+                    result[row][col] = value;
+                    // move the trial index to next
+                    trialsIndexofEachBlankCell[row * SUDOKU_SIZE + col] = i + 1;
+                    // remove the current cell out of queue
+                    // push the cell just input into the stack
+                    blankCellStack.push(blankCell);
+                    existValidInput = true;
+                    break;
+                }
+            }
+            if (!existValidInput) {
+                if (blankCellStack.isEmpty()) {
+                    return false;
+                }
+                // go back the last cell input to try another number
+                Pair<Integer, ArrayList<Integer>> lastCell = blankCellStack.pop();
+                int lastCellRow = lastCell.getFirst() / SUDOKU_SIZE;
+                int lastCellCol = lastCell.getFirst() % SUDOKU_SIZE;
+                // reset the value inserted in the array
+                result[lastCellRow][lastCellCol] = 0;
+                // reset the value in the array that store the trial index
+                trialsIndexofEachBlankCell[row * SUDOKU_SIZE + col] = 0;
+                // return false if there is no last cell in the stack
 
-        PriorityQueue<Pair<Integer, ArrayList<Integer>>> blankCellQueue = FindBlankCellsQueue(result);
-        return SolveSudokuUtil(result, blankCellQueue);
+            }
+            blankCellList = FindBlankCellsList(result);
+        }
+        return true;
     }
 
-    private static PriorityQueue<Pair<Integer, ArrayList<Integer>>> FindBlankCellsQueue(int[][] sudokuBoard) {
-        PriorityQueue<Pair<Integer, ArrayList<Integer>>> blankCellQueue = new PriorityQueue<>(
-                Comparator.comparingInt(p -> p.getSecond().size())
-        );
+    private static ArrayList<Pair<Integer, ArrayList<Integer>>> FindBlankCellsList(int[][] sudokuBoard) {
+        ArrayList<Pair<Integer, ArrayList<Integer>>> blankCellList = new ArrayList<>();
         for (int row = 0; row < SUDOKU_SIZE; row++) {
             for (int col = 0; col < SUDOKU_SIZE; col++) {
                 if (sudokuBoard[row][col] == 0) {
@@ -29,11 +66,22 @@ public class HelpMethods {
                             validInputs.add(i);
                         }
                     }
-                    blankCellQueue.add(new Pair<>(SUDOKU_SIZE * row + col, validInputs));
+                    blankCellList.add(new Pair<>(SUDOKU_SIZE * row + col, validInputs));
                 }
             }
         }
-        return blankCellQueue;
+        Collections.sort(blankCellList, new Comparator<>() {
+                    @Override
+                    public int compare(Pair<Integer, ArrayList<Integer>> o1, Pair<Integer, ArrayList<Integer>> o2) {
+                        if (o1.getSecond().size() != o2.getSecond().size()) {
+                            return o1.getSecond().size() - o2.getSecond().size();
+                        } else {
+                            return o1.getFirst() - o2.getFirst();
+                        }
+                    }
+                }
+        );
+        return blankCellList;
     }
 
     private static boolean SolveSudokuUtil(int[][] sudokuBoard, PriorityQueue<Pair<Integer, ArrayList<Integer>>> blankCellQueue) {
