@@ -50,7 +50,10 @@ public class SolveController implements Initializable {
     @FXML
     public void solve() {
         resetSelect();
+        long startTime = System.nanoTime();
         SolveSudoku(inputArray, resultArray);
+        long finishTime = System.nanoTime();
+        System.out.println((double) (finishTime - startTime) / 1000000000 +"s");
         drawSudokuBoardResult();
     }
 
@@ -119,7 +122,6 @@ public class SolveController implements Initializable {
                 if (select == -1) {
                     return;
                 } else {
-                    System.out.println(select);
                     importBtn.setDisable(true);
                     for (Node node : insertGrid.getChildren()) {
                             if (node instanceof TextField) {
