@@ -13,39 +13,68 @@ public class HelpMethods {
         }
         ArrayList<Pair<Integer, ArrayList<Integer>>> blankCellList = FindBlankCellsList(result);
         Stack<Pair<Integer, ArrayList<Integer>>> blankCellStack = new Stack<>();
-        int[] trialsIndexofEachBlankCell = new int[81];
-        int test = 0;
+        ArrayList<Integer>[] trialListArray = new ArrayList[SUDOKU_SIZE * SUDOKU_SIZE];
+        for (int i = 0; i < trialListArray.length; i++) {
+            trialListArray[i] = new ArrayList<>();
+        }
         while (!blankCellList.isEmpty()) {
-            test++;
-            Pair<Integer, ArrayList<Integer>> blankCell = blankCellList.getFirst();
+            Pair<Integer, ArrayList<Integer>> blankCell = blankCellList.getLast();
             int row = blankCell.getFirst() / SUDOKU_SIZE;
             int col = blankCell.getFirst() % SUDOKU_SIZE;
             ArrayList<Integer> validInputs = blankCell.getSecond();
-            if (trialsIndexofEachBlankCell[blankCell.getFirst()] < validInputs.size()) {
-                int value = validInputs.get(trialsIndexofEachBlankCell[blankCell.getFirst()]);
-                result[row][col] = value;
-                // move the trial index to next
-                trialsIndexofEachBlankCell[row * SUDOKU_SIZE + col] = trialsIndexofEachBlankCell[blankCell.getFirst()]  + 1;
-                // push the cell just input into the stack
+            validInputs.removeAll(trialListArray[blankCell.getFirst()]);
+            if (!validInputs.isEmpty()) {
+                int input = validInputs.getFirst();
+                result[row][col] = input;
+                blankCellList.removeLast();
                 blankCellStack.push(blankCell);
+                // update the blank cell list
+                for (Pair<Integer, ArrayList<Integer>> cell : blankCellList) {
+                    int cellRow = cell.getFirst() / SUDOKU_SIZE;
+                    int cellCol = cell.getFirst() % SUDOKU_SIZE;
+                    if (cellRow == row || cellCol == col || (cellRow / 3 == row / 3 && cellCol / 3 == col / 3)) {
+                        cell.getSecond().remove(Integer.valueOf(input));
+                    }
+                }
+                SortBlankCellList(blankCellList);
             }
             else {
-                // return false if there is no last cell in the stack
                 if (blankCellStack.isEmpty()) {
                     return false;
                 }
-                // go back the last cell input to try another number
                 Pair<Integer, ArrayList<Integer>> lastCell = blankCellStack.pop();
                 int lastCellRow = lastCell.getFirst() / SUDOKU_SIZE;
                 int lastCellCol = lastCell.getFirst() % SUDOKU_SIZE;
-                // reset the value inserted in the array
+                int old_value = result[lastCellRow][lastCellCol];
+                trialListArray[lastCell.getFirst()].add(old_value);
                 result[lastCellRow][lastCellCol] = 0;
-                // reset the value in the array that store the trial index
-                trialsIndexofEachBlankCell[row * SUDOKU_SIZE + col] = 0;
+                for (Pair<Integer, ArrayList<Integer>> cell : blankCellList) {
+                    int cellRow = cell.getFirst() / SUDOKU_SIZE;
+                    int cellCol = cell.getFirst() % SUDOKU_SIZE;
+                    if (cellRow == lastCellRow || cellCol == lastCellCol || (cellRow / 3 == lastCellRow / 3 && cellCol / 3 == lastCellCol / 3)) {
+                        cell.getSecond().add(Integer.valueOf(old_value));
+                    }
+                }
+                blankCellList.add(lastCell);
+                trialListArray[blankCell.getFirst()].clear();
+                SortBlankCellList(blankCellList);
             }
-            blankCellList = FindBlankCellsList(result);
         }
         return true;
+    }
+
+    private static void SortBlankCellList(ArrayList<Pair<Integer, ArrayList<Integer>>> blankCellList) {
+        Collections.sort(blankCellList, new Comparator<>() {
+                    @Override
+                    public int compare(Pair<Integer, ArrayList<Integer>> o1, Pair<Integer, ArrayList<Integer>> o2) {
+                        if (o1.getSecond().size() != o2.getSecond().size()) {
+                            return o2.getSecond().size() - o1.getSecond().size();
+                        } else {
+                            return o2.getFirst() - o1.getFirst();
+                        }
+                    }
+                }
+        );
     }
 
     private static ArrayList<Pair<Integer, ArrayList<Integer>>> FindBlankCellsList(int[][] sudokuBoard) {
@@ -54,12 +83,12 @@ public class HelpMethods {
             for (int col = 0; col < SUDOKU_SIZE; col++) {
                 if (sudokuBoard[row][col] == 0) {
                     ArrayList<Integer> validInputs = new ArrayList<>();
-                    List<Integer> numbers = new ArrayList<>();
-                    for (int i = 1; i <= 9; i++) {
-                        numbers.add(i);
+                    List<Integer> nums = new ArrayList<>();
+                    for (int i = 1; i <= SUDOKU_SIZE; i++) {
+                        nums.add(i);
                     }
-                    Collections.shuffle(numbers);
-                    for (int i : numbers) {
+                    Collections.shuffle(nums);
+                    for (int i : nums) {
                         if (IsValidInsert(sudokuBoard, row, col, i)) {
                             validInputs.add(i);
                         }
@@ -68,17 +97,7 @@ public class HelpMethods {
                 }
             }
         }
-        Collections.sort(blankCellList, new Comparator<>() {
-                    @Override
-                    public int compare(Pair<Integer, ArrayList<Integer>> o1, Pair<Integer, ArrayList<Integer>> o2) {
-                        if (o1.getSecond().size() != o2.getSecond().size()) {
-                            return o1.getSecond().size() - o2.getSecond().size();
-                        } else {
-                            return o1.getFirst() - o2.getFirst();
-                        }
-                    }
-                }
-        );
+        SortBlankCellList(blankCellList);
         return blankCellList;
     }
 
