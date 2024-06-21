@@ -72,6 +72,6 @@
       <Button fx:id="eraseButton" focusTraversable="false" layoutX="786.0" layoutY="134.0" mnemonicParsing="false" onAction="#erase" prefHeight="39.0" prefWidth="82.0" text="Erase" />
       <Button layoutX="786.0" layoutY="78.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="82.0" text="Solve" />
       <Label layoutX="599.0" layoutY="27.0" text="Difficulty" />
-      <ChoiceBox fx:id="difficultyList" layoutX="659.0" layoutY="23.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="difficultyList" layoutX="659.0" layoutY="23.0" prefHeight="26.0" prefWidth="90.0" />
    </children>
 </AnchorPane>

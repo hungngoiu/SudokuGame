@@ -2,8 +2,6 @@ package com.example.sudokugame.ui;
 
 import com.example.sudokugame.Main;
 import com.example.sudokugame.core.Game;
-import com.example.sudokugame.util.Constants;
-import com.example.sudokugame.util.LoadMethods;
 import com.example.sudokugame.util.Pair;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,7 +15,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -28,11 +25,12 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import static com.example.sudokugame.util.Constants.*;
+import static com.example.sudokugame.util.Constants.LEVELS.EASY;
+import static com.example.sudokugame.util.LoadMethods.LoadLevel;
 
 public class SudokuController implements Initializable{
 
@@ -54,6 +52,7 @@ public class SudokuController implements Initializable{
     private Game game = Game.getInstance();
     private int select = -1;
 
+    private LEVELS currentLevel = EASY;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -67,6 +66,7 @@ public class SudokuController implements Initializable{
         for(LEVELS levels : LEVELS.values()){
             difficultyList.getItems().add(levels.toString());
         }
+        difficultyList.setValue("EASY");
         difficultyList.setOnAction(this::getLevel);
     }
     private void initSudokuBoard() {
@@ -104,7 +104,6 @@ public class SudokuController implements Initializable{
                             int value = Integer.parseInt(textfield.getText());
                             ArrayList<Pair<Integer, Integer>> row_col_pairs = new ArrayList<>();
                             game.getLevel().insert(row, col, value, row_col_pairs);
-                            System.out.println("j");
                             clearAllMistake();
                             markAsMistake(row_col_pairs);
                         }
@@ -222,43 +221,52 @@ public class SudokuController implements Initializable{
     @FXML
     private void restart() {
         clearAllMistake();
-        resetSelect();
-        game.loadLevel();
         drawSudokuBoard();
     }
-    @FXML
-    void newGame() {
+    private void loadNewGame(LEVELS levels){
         clearAllMistake();
         resetSelect();
-        game.nextLevel();
+        game.loadLevel(levels);
         drawSudokuBoard();
         sudokuBoard.setDisable(false);
+    }
+
+    @FXML
+    void newGame() {
+        loadNewGame(currentLevel);
     }
 
     private void getLevel(ActionEvent event){
         String levelString = difficultyList.getValue();
         switch(levelString){
             case "EASY":
-                game.loadLevel(LEVELS.EASY);
-                drawSudokuBoard();
+                currentLevel = EASY;
                 break;
             case "MEDIUM":
-                game.loadLevel(LEVELS.MEDIUM);
-                drawSudokuBoard();
+                currentLevel = LEVELS.MEDIUM;
                 break;
             case "HARD":
-                game.loadLevel(LEVELS.HARD);
-                drawSudokuBoard();
+                currentLevel = LEVELS.HARD;
                 break;
             case "EVIL":
-                game.loadLevel(LEVELS.EVIL);
-                drawSudokuBoard();
+                currentLevel = LEVELS.EVIL;
                 break;
             default:
                 break;
         }
+        loadNewGame(currentLevel);
     }
 
+    private void restartSudokuBoard(){
+        for (int row = 0; row < SUDOKU_SIZE; row++) {
+            for (int col = 0; col < SUDOKU_SIZE; col++) {
+                if(game.getLevel().getElement(row, col) != 0)
+                    drawCell(row, col, game.getLevel().getElement(row, col));
+                else
+                    drawCell(row, col, game.getLevel().getElement(row, col));
+            }
+        }
+    }
 
     @FXML
     public void backToMenu(){

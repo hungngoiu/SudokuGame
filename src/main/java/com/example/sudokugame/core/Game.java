@@ -24,10 +24,9 @@ public final class Game {
     private Stage stage;
 
     private Level level;
-    private int levelIndex;
+
 
     private Game() {
-        levelIndex = 0;
     }
     public static Game getInstance() {
         return INSTANCE;
@@ -47,8 +46,8 @@ public final class Game {
 
     }
 
-    public void loadLevel() {
-        level = LoadLevel(levelIndex);
+    public void loadLevel(int[][] sudokuBoard) {
+        level = new Level(sudokuBoard);
     }
 
     public void loadLevel(Constants.LEVELS levels) {
@@ -58,14 +57,6 @@ public final class Game {
 
     public Level getLevel() {
         return level;
-    }
-
-    public void nextLevel() {
-        levelIndex++;
-        if (levelIndex == LEVELS_NUMBER) {
-            levelIndex = 0;
-        }
-        loadLevel();
     }
 
     public Stage getStage() {
