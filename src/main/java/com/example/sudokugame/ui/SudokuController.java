@@ -2,6 +2,7 @@ package com.example.sudokugame.ui;
 
 import com.example.sudokugame.Main;
 import com.example.sudokugame.core.Game;
+import com.example.sudokugame.util.Constants;
 import com.example.sudokugame.util.LoadMethods;
 import com.example.sudokugame.util.Pair;
 import javafx.event.ActionEvent;
@@ -15,6 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -26,6 +28,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -44,7 +47,7 @@ public class SudokuController implements Initializable{
     @FXML
     private Button redoButton;
     @FXML
-    private Button hintButton;
+    private ChoiceBox<String> difficultyList;
     private Scene scene;
     @FXML
     private Button eraseButton;
@@ -54,11 +57,18 @@ public class SudokuController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initLevelSelector();
         initSudokuBoard();
         initInputBoard();
         drawSudokuBoard();
     }
 
+    private void initLevelSelector(){
+        for(LEVELS levels : LEVELS.values()){
+            difficultyList.getItems().add(levels.toString());
+        }
+        difficultyList.setOnAction(this::getLevel);
+    }
     private void initSudokuBoard() {
         for (int row = 0; row < SUDOKU_SIZE; row++) {
             for (int col = 0; col < SUDOKU_SIZE; col++) {
@@ -225,6 +235,29 @@ public class SudokuController implements Initializable{
         sudokuBoard.setDisable(false);
     }
 
+    private void getLevel(ActionEvent event){
+        String levelString = difficultyList.getValue();
+        switch(levelString){
+            case "EASY":
+                game.loadLevel(LEVELS.EASY);
+                drawSudokuBoard();
+                break;
+            case "MEDIUM":
+                game.loadLevel(LEVELS.MEDIUM);
+                drawSudokuBoard();
+                break;
+            case "HARD":
+                game.loadLevel(LEVELS.HARD);
+                drawSudokuBoard();
+                break;
+            case "EVIL":
+                game.loadLevel(LEVELS.EVIL);
+                drawSudokuBoard();
+                break;
+            default:
+                break;
+        }
+    }
 
 
     @FXML
