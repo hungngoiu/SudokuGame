@@ -1,7 +1,5 @@
 package com.example.sudokugame.ui;
 
-import com.example.sudokugame.core.Level;
-import com.example.sudokugame.util.HelpMethods;
 import com.example.sudokugame.util.LoadMethods;
 import com.example.sudokugame.util.Pair;
 import javafx.event.ActionEvent;

@@ -1,13 +1,6 @@
 package com.example.sudokugame.core;
 
 import com.example.sudokugame.util.Pair;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.effect.Light;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -69,12 +62,7 @@ public class Level {
         }
         SolveSudoku(sudokuBoard, result);
     }
-    public int[][] getInitialValue(){
-        return initialValue;
-    }
-    public int getResult(int row, int col){
-        return result[row][col];
-    }
+
     public int getElement(int row, int col) {
         return this.sudokuBoard[row][col];
     }

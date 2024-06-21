@@ -19,8 +19,6 @@ import static com.example.sudokugame.util.LoadMethods.SwitchToScene;
 public class MenuController {
     private Stage stage;
     @FXML
-    private Label instruction;
-    @FXML
     private void switchToPlay(ActionEvent event) throws IOException {
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Game game = Game.getInstance();
