@@ -21,21 +21,16 @@ public class HelpMethods {
             int row = blankCell.getFirst() / SUDOKU_SIZE;
             int col = blankCell.getFirst() % SUDOKU_SIZE;
             ArrayList<Integer> validInputs = blankCell.getSecond();
-            boolean existValidInput = false;
-            for (int i = trialsIndexofEachBlankCell[blankCell.getFirst()]; i < validInputs.size(); i++) {
-                int value = validInputs.get(i);
-                if (IsValidInsert(result, row, col, value)) {
-                    result[row][col] = value;
-                    // move the trial index to next
-                    trialsIndexofEachBlankCell[row * SUDOKU_SIZE + col] = i + 1;
-                    // remove the current cell out of queue
-                    // push the cell just input into the stack
-                    blankCellStack.push(blankCell);
-                    existValidInput = true;
-                    break;
-                }
+            if (trialsIndexofEachBlankCell[blankCell.getFirst()] < validInputs.size()) {
+                int value = validInputs.get(trialsIndexofEachBlankCell[blankCell.getFirst()]);
+                result[row][col] = value;
+                // move the trial index to next
+                trialsIndexofEachBlankCell[row * SUDOKU_SIZE + col] = trialsIndexofEachBlankCell[blankCell.getFirst()]  + 1;
+                // push the cell just input into the stack
+                blankCellStack.push(blankCell);
             }
-            if (!existValidInput) {
+            else {
+                // return false if there is no last cell in the stack
                 if (blankCellStack.isEmpty()) {
                     return false;
                 }
@@ -47,8 +42,6 @@ public class HelpMethods {
                 result[lastCellRow][lastCellCol] = 0;
                 // reset the value in the array that store the trial index
                 trialsIndexofEachBlankCell[row * SUDOKU_SIZE + col] = 0;
-                // return false if there is no last cell in the stack
-
             }
             blankCellList = FindBlankCellsList(result);
         }
@@ -61,7 +54,12 @@ public class HelpMethods {
             for (int col = 0; col < SUDOKU_SIZE; col++) {
                 if (sudokuBoard[row][col] == 0) {
                     ArrayList<Integer> validInputs = new ArrayList<>();
-                    for (int i = 1; i <= SUDOKU_SIZE; i++) {
+                    List<Integer> numbers = new ArrayList<>();
+                    for (int i = 1; i <= 9; i++) {
+                        numbers.add(i);
+                    }
+                    Collections.shuffle(numbers);
+                    for (int i : numbers) {
                         if (IsValidInsert(sudokuBoard, row, col, i)) {
                             validInputs.add(i);
                         }
