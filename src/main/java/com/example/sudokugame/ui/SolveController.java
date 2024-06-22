@@ -161,4 +161,73 @@ public class SolveController implements Initializable {
         }
     }
 
+    // New algo using a bit manipulation
+    public void solve_with_new_algo(ActionEvent actionEvent) {
+        resetSelect();
+        SolveSudokuWithBitManipulation(inputArray, resultArray);
+        drawSudokuBoardResult();
+    }
+
+    private boolean SolveSudokuWithBitManipulation(int[][] board, int[][] result) {
+        // Bit manipulation algorithm to solve Sudoku
+        int[] rows = new int[9];
+        int[] cols = new int[9];
+        int[] blocks = new int[9];
+
+        // Initialize the bitmask arrays
+        for (int r = 0; r < 9; r++) {
+            for (int c = 0; c < 9; c++) {
+                if (board[r][c] != 0) {
+                    int val = board[r][c] - 1;
+                    rows[r] |= (1 << val);
+                    cols[c] |= (1 << val);
+                    blocks[(r / 3) * 3 + (c / 3)] |= (1 << val);
+                }
+            }
+        }
+
+        return solve(board, 0, 0, rows, cols, blocks, result);
+    }
+
+    private boolean solve(int[][] board, int row, int col, int[] rows, int[] cols, int[] blocks, int[][] result) {
+        if (row == 9) {
+            // Copy the solution to the result array
+            for (int r = 0; r < 9; r++) {
+                for (int c = 0; c < 9; c++) {
+                    result[r][c] = board[r][c];
+                }
+            }
+            return true;
+        }
+        if (col == 9) {
+            return solve(board, row + 1, 0, rows, cols, blocks, result);
+        }
+        if (board[row][col] != 0) {
+            return solve(board, row, col + 1, rows, cols, blocks, result);
+        }
+
+        int blockIndex = (row / 3) * 3 + (col / 3);
+        for (int val = 1; val <= 9; val++) {
+            int bit = 1 << (val - 1);
+            if ((rows[row] & bit) == 0 && (cols[col] & bit) == 0 && (blocks[blockIndex] & bit) == 0) {
+                // Place the value
+                board[row][col] = val;
+                rows[row] |= bit;
+                cols[col] |= bit;
+                blocks[blockIndex] |= bit;
+
+                // Recurse
+                if (solve(board, row, col + 1, rows, cols, blocks, result)) {
+                    return true;
+                }
+
+                // Undo the value
+                board[row][col] = 0;
+                rows[row] &= ~bit;
+                cols[col] &= ~bit;
+                blocks[blockIndex] &= ~bit;
+            }
+        }
+        return false;
+    }
 }
