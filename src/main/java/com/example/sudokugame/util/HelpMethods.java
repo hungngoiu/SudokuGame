@@ -11,26 +11,29 @@ public class HelpMethods {
                 result[row][col] = sudokuBoard[row][col];
             }
         }
-        ArrayList<Pair<Integer, ArrayList<Integer>>> blankCellList = FindBlankCellsList(result);
-        Stack<Pair<Integer, ArrayList<Integer>>> blankCellStack = new Stack<>();
-        ArrayList<Integer>[] trialListArray = new ArrayList[SUDOKU_SIZE * SUDOKU_SIZE];
-        Stack<ArrayList<Pair<Integer, ArrayList<Integer>>>> affectedCellStack = new Stack<>();
+        // Generate the blankCellList, blankCellStack and the trialListArray
+        ArrayList<Pair<Integer, ArrayList<Integer>>> blankCellList = FindBlankCellsList(result); // store the blank cell left
+        Stack<Pair<Integer, ArrayList<Integer>>> blankCellStack = new Stack<>(); // store the blank cell that have been filled
+        ArrayList<Integer>[] trialListArray = new ArrayList[SUDOKU_SIZE * SUDOKU_SIZE]; // store the numbers we tried for each cell
+        Stack<ArrayList<Pair<Integer, ArrayList<Integer>>>> affectedCellStack = new Stack<>(); // store the list of cells that have been affected by a trial input
         for (int i = 0; i < trialListArray.length; i++) {
             trialListArray[i] = new ArrayList<>();
         }
 
         while (!blankCellList.isEmpty()) {
-            Pair<Integer, ArrayList<Integer>> blankCell = blankCellList.getLast();
+            Pair<Integer, ArrayList<Integer>> blankCell = blankCellList.getLast(); // get the last cell in the list (which is the cell with the least candidates left
             int row = blankCell.getFirst() / SUDOKU_SIZE;
             int col = blankCell.getFirst() % SUDOKU_SIZE;
             ArrayList<Integer> validInputs = new ArrayList<>(blankCell.getSecond());
-            validInputs.removeAll(trialListArray[blankCell.getFirst()]);
-            if (!validInputs.isEmpty()) {
+            validInputs.removeAll(trialListArray[blankCell.getFirst()]); // get the list of candidates for this cell, after remove the numbers we tried in previous loops
+            if (!validInputs.isEmpty()) { // if the list is empty => no candidates left
+                // get the candidate and input it into the result[][]
                 int input = validInputs.getFirst();
                 result[row][col] = input;
+                // remove the cell from the list and push it into the stack
                 blankCellList.removeLast();
                 blankCellStack.push(blankCell);
-                // update the blank cell list
+                // update the blank cell list dynamically
                 ArrayList<Pair<Integer, ArrayList<Integer>>> affectedCells = new ArrayList<>();
                 for (Pair<Integer, ArrayList<Integer>> cell : blankCellList) {
                     int cellRow = cell.getFirst() / SUDOKU_SIZE;
@@ -41,25 +44,31 @@ public class HelpMethods {
                         }
                     }
                 }
+                // push the affectedCells list into the stack for restoring value in the future backtracking process
                 affectedCellStack.push(affectedCells);
             }
             else {
-                if (blankCellStack.isEmpty()) {
+                if (blankCellStack.isEmpty()) { // if the stack is empty, return false because there is no cell to backtrack left
                     return false;
                 }
-                Pair<Integer, ArrayList<Integer>> lastCell = blankCellStack.pop();
-                ArrayList<Pair<Integer, ArrayList<Integer>>> affectedCells = affectedCellStack.pop();
+                // backtracking
+                Pair<Integer, ArrayList<Integer>> lastCell = blankCellStack.pop(); // pop the last cell out of the stack
+                ArrayList<Pair<Integer, ArrayList<Integer>>> affectedCells = affectedCellStack.pop(); // pop the list of affected cells out of the stack
                 int lastCellRow = lastCell.getFirst() / SUDOKU_SIZE;
                 int lastCellCol = lastCell.getFirst() % SUDOKU_SIZE;
+                // add the curren value of result[lastCellRow][lastCellCol] into the trialList of that cell, and clear the current cell trial list
                 int old_value = result[lastCellRow][lastCellCol];
                 trialListArray[lastCell.getFirst()].add(old_value);
                 trialListArray[blankCell.getFirst()].clear();
+                // retore the value in the array result[][]
                 result[lastCellRow][lastCellCol] = 0;
+                // restore the value affected by the insertion of last cell
                 for (Pair<Integer, ArrayList<Integer>> cell : affectedCells) {
                     cell.getSecond().add(old_value);
                 }
                 blankCellList.add(lastCell);
             }
+            // sort the list again
             SortBlankCellList(blankCellList);
         }
         return true;
