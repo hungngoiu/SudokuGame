@@ -14,14 +14,16 @@ public class HelpMethods {
         ArrayList<Pair<Integer, ArrayList<Integer>>> blankCellList = FindBlankCellsList(result);
         Stack<Pair<Integer, ArrayList<Integer>>> blankCellStack = new Stack<>();
         ArrayList<Integer>[] trialListArray = new ArrayList[SUDOKU_SIZE * SUDOKU_SIZE];
+        Stack<ArrayList<Pair<Integer, ArrayList<Integer>>>> affectedCellStack = new Stack<>();
         for (int i = 0; i < trialListArray.length; i++) {
             trialListArray[i] = new ArrayList<>();
         }
+
         while (!blankCellList.isEmpty()) {
             Pair<Integer, ArrayList<Integer>> blankCell = blankCellList.getLast();
             int row = blankCell.getFirst() / SUDOKU_SIZE;
             int col = blankCell.getFirst() % SUDOKU_SIZE;
-            ArrayList<Integer> validInputs = blankCell.getSecond();
+            ArrayList<Integer> validInputs = new ArrayList<>(blankCell.getSecond());
             validInputs.removeAll(trialListArray[blankCell.getFirst()]);
             if (!validInputs.isEmpty()) {
                 int input = validInputs.getFirst();
@@ -29,36 +31,36 @@ public class HelpMethods {
                 blankCellList.removeLast();
                 blankCellStack.push(blankCell);
                 // update the blank cell list
+                ArrayList<Pair<Integer, ArrayList<Integer>>> affectedCells = new ArrayList<>();
                 for (Pair<Integer, ArrayList<Integer>> cell : blankCellList) {
                     int cellRow = cell.getFirst() / SUDOKU_SIZE;
                     int cellCol = cell.getFirst() % SUDOKU_SIZE;
                     if (cellRow == row || cellCol == col || (cellRow / 3 == row / 3 && cellCol / 3 == col / 3)) {
-                        cell.getSecond().remove(Integer.valueOf(input));
+                        if(cell.getSecond().remove(Integer.valueOf(input))) {
+                            affectedCells.add(cell);
+                        }
                     }
                 }
-                SortBlankCellList(blankCellList);
+                affectedCellStack.push(affectedCells);
             }
             else {
                 if (blankCellStack.isEmpty()) {
                     return false;
                 }
                 Pair<Integer, ArrayList<Integer>> lastCell = blankCellStack.pop();
+                ArrayList<Pair<Integer, ArrayList<Integer>>> affectedCells = affectedCellStack.pop();
                 int lastCellRow = lastCell.getFirst() / SUDOKU_SIZE;
                 int lastCellCol = lastCell.getFirst() % SUDOKU_SIZE;
                 int old_value = result[lastCellRow][lastCellCol];
                 trialListArray[lastCell.getFirst()].add(old_value);
+                trialListArray[blankCell.getFirst()].clear();
                 result[lastCellRow][lastCellCol] = 0;
-                for (Pair<Integer, ArrayList<Integer>> cell : blankCellList) {
-                    int cellRow = cell.getFirst() / SUDOKU_SIZE;
-                    int cellCol = cell.getFirst() % SUDOKU_SIZE;
-                    if (cellRow == lastCellRow || cellCol == lastCellCol || (cellRow / 3 == lastCellRow / 3 && cellCol / 3 == lastCellCol / 3)) {
-                        cell.getSecond().add(Integer.valueOf(old_value));
-                    }
+                for (Pair<Integer, ArrayList<Integer>> cell : affectedCells) {
+                    cell.getSecond().add(old_value);
                 }
                 blankCellList.add(lastCell);
-                trialListArray[blankCell.getFirst()].clear();
-                SortBlankCellList(blankCellList);
             }
+            SortBlankCellList(blankCellList);
         }
         return true;
     }
