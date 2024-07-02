@@ -11,8 +11,7 @@ import java.io.IOException;
 import java.util.*;
 
 import static com.example.sudokugame.util.Constants.*;
-import static com.example.sudokugame.util.HelpMethods.FindNextEmptyCell;
-import static com.example.sudokugame.util.HelpMethods.SolveSudoku;
+import static com.example.sudokugame.util.HelpMethods.*;
 
 class Move {
     private int row;
@@ -42,7 +41,6 @@ class Move {
 
 public class Level {
     private int[][] board;
-    private Set<Integer>[][] candidates;
     private int[][] sudokuBoard;
     private int[][] initialValue;
     private int[][] result;
@@ -57,7 +55,6 @@ public class Level {
         this.sudokuBoard = sudokuBoard;
         this.board = sudokuBoard;
         this.initialValue = new int[SUDOKU_SIZE][SUDOKU_SIZE];
-        this.candidates = new HashSet[9][9];
         this.result = new int[SUDOKU_SIZE][SUDOKU_SIZE];
 
         for(int row = 0; row < SUDOKU_SIZE; ++row) {
@@ -69,148 +66,16 @@ public class Level {
                 }
             }
         }
-        initializeCandidates();
-        solve();
-        result = board;
+//        initializeCandidates();
+//        solve();
+//        result = board;
+        SolveSudoku(sudokuBoard, result);
     }
 
-    private void initializeCandidates() {
-        for (int r = 0; r < 9; r++) {
-            for (int c = 0; c < 9; c++) {
-                candidates[r][c] = new HashSet<>();
-                if (board[r][c] == 0) {
-                    for (int num = 1; num <= 9; num++) {
-                        candidates[r][c].add(num);
-                    }
-                } else {
-                    candidates[r][c].add(board[r][c]);
-                }
-            }
-        }
-        applyConstraints();
-    }
 
-    private void applyConstraints() {
-        boolean progress;
-        do {
-            progress = false;
-            for (int r = 0; r < 9; r++) {
-                for (int c = 0; c < 9; c++) {
-                    if (board[r][c] == 0) {
-                        Set<Integer> cellCandidates = new HashSet<>(candidates[r][c]);
-                        for (int num : cellCandidates) {
-                            if (!isValid(r, c, num)) {
-                                candidates[r][c].remove(num);
-                                progress = true;
-                            }
-                        }
-                        if (candidates[r][c].size() == 1) {
-                            int num = candidates[r][c].iterator().next();
-                            board[r][c] = num;
-                            candidates[r][c].clear();
-                            applyConstraintsForCell(r, c, num);
-                            progress = true;
-                        }
-                    }
-                }
-            }
-            progress = progress || applyHiddenSingles();
-        } while (progress);
-    }
-    private boolean applyHiddenSingles() {
-        boolean progress = false;
-        for (int num = 1; num <= 9; num++) {
-            for (int i = 0; i < 9; i++) {
-                // Check rows
-                int rowCount = 0;
-                int rowIndex = -1;
-                for (int j = 0; j < 9; j++) {
-                    if (candidates[i][j].contains(num)) {
-                        rowCount++;
-                        rowIndex = j;
-                    }
-                }
-                if (rowCount == 1) {
-                    board[i][rowIndex] = num;
-                    candidates[i][rowIndex].clear();
-                    applyConstraintsForCell(i, rowIndex, num);
-                    progress = true;
-                }
-
-                // Check columns
-                int colCount = 0;
-                int colIndex = -1;
-                for (int j = 0; j < 9; j++) {
-                    if (candidates[j][i].contains(num)) {
-                        colCount++;
-                        colIndex = j;
-                    }
-                }
-                if (colCount == 1) {
-                    board[colIndex][i] = num;
-                    candidates[colIndex][i].clear();
-                    applyConstraintsForCell(colIndex, i, num);
-                    progress = true;
-                }
-
-                // Check subgrids
-                int startRow = (i / 3) * 3;
-                int startCol = (i % 3) * 3;
-                int gridCount = 0;
-                int gridRowIndex = -1;
-                int gridColIndex = -1;
-                for (int r = startRow; r < startRow + 3; r++) {
-                    for (int c = startCol; c < startCol + 3; c++) {
-                        if (candidates[r][c].contains(num)) {
-                            gridCount++;
-                            gridRowIndex = r;
-                            gridColIndex = c;
-                        }
-                    }
-                }
-                if (gridCount == 1) {
-                    board[gridRowIndex][gridColIndex] = num;
-                    candidates[gridRowIndex][gridColIndex].clear();
-                    applyConstraintsForCell(gridRowIndex, gridColIndex, num);
-                    progress = true;
-                }
-            }
-        }
-        return progress;
-    }
-    private void applyConstraintsForCell(int row, int col, int num) {
-        for (int i = 0; i < 9; i++) {
-            candidates[row][i].remove(num);
-            candidates[i][col].remove(num);
-        }
-        int startRow = (row / 3) * 3;
-        int startCol = (col / 3) * 3;
-        for (int r = startRow; r < startRow + 3; r++) {
-            for (int c = startCol; c < startCol + 3; c++) {
-                candidates[r][c].remove(num);
-            }
-        }
-    }
-    private boolean isValid(int row, int col, int num) {
-        for (int i = 0; i < 9; i++) {
-            if (board[row][i] == num || board[i][col] == num) {
-                return false;
-            }
-        }
-        int startRow = (row / 3) * 3;
-        int startCol = (col / 3) * 3;
-        for (int r = startRow; r < startRow + 3; r++) {
-            for (int c = startCol; c < startCol + 3; c++) {
-                if (board[r][c] == num) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    public void solve() {
-        applyConstraints();
-    }
+//    public void solve() {
+//        applyConstraints();
+//    }
 
 
 
